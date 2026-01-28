@@ -32,7 +32,7 @@ function Footer() {
                 {/* Contact/Social Section */}
                 <div className="flex flex-col items-center md:items-end space-y-4">
                     <h3 className="text-lg font-semibold tracking-wide text-primary">Contact</h3>
-                    <div className="flex flex-col space-y-2 text-gray-400 text-sm text-right">
+                    <div className="flex flex-col space-y-2 text-gray-400 text-sm md:text-right">
                         <a href="mailto:hello@saga.com" className="hover:text-white transition-colors">hello@saga.com</a>
                         <span>+1 (555) 123-4567</span>
                         <div className="pt-2 flex gap-4 justify-center md:justify-end">

@@ -90,7 +90,7 @@ export default function HorizontalCarousal(){
     return(
         <>
             <div className="text-white text-center mt-10">
-                <h1 className="font-Great_Vibes text-7xl text-primary">Trending One's</h1>
+                <h1 className="font-Great_Vibes md:text-7xl text-5xl text-primary">Trending One's</h1>
                 <span className="text-xl mt-5 text-gray-300">Odd's everyone is eyeing</span>
             </div>
             <div className="mt-8 relative w-[90vw] m-auto">
@@ -108,7 +108,7 @@ export default function HorizontalCarousal(){
                                 src={item.image} 
                                 alt={item.name} 
                                 draggable="false"
-                                className="h-[40vh] lg:h-[60vh] w-[42vw] lg:w-[28vw] object-cover rounded-2xl hover:scale-105 transform transition-transform duration-300 select-none" 
+                                className="md:h-[40vh] h-[30vh] lg:h-[60vh] md:w-[42vw] w-[60vw] lg:w-[28vw] object-cover rounded-2xl hover:scale-105 transform transition-transform duration-300 select-none" 
                             />
                         </div>
                     ))}

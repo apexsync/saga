@@ -43,7 +43,7 @@ function CircularHorizontalScroll() {
   };
 
   return (
-    <div className="py-6 relative group/scroll">
+    <div className="md:py-6 relative group/scroll">
         <button 
           onClick={scrollLeft}
           className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full opacity-0 group-hover/scroll:opacity-100 transition-opacity duration-300 pointer-events-auto"

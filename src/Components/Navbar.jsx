@@ -60,9 +60,9 @@ function Navbar(){
                 </button>
             </ul>
 
-           <Link to="/"><img src="/SAGA LOGO.PNG" alt="Logo" className='h-15' /></Link>
+           <Link to="/"><img src="/SAGA LOGO.PNG" alt="Logo" className='md:h-15 h-10' /></Link>
 
-            <div className="flex text-primary gap-6 mx-10">
+            <div className="flex text-primary gap-6 md:mx-10 mx-4">
                 <svg onClick={() => setIsSearchOpen(true)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#FB7010" className="w-6 h-6 cursor-pointer hover:text-gray-300">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>

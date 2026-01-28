@@ -295,7 +295,11 @@ export async function fetchProductByHandle(handle) {
 export async function searchProducts(query) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const lowerQuery = query.toLowerCase();
+      const lowerQuery = query.toLowerCase().trim();
+      if (!lowerQuery) { // Early exit if empty after trim
+          resolve([]);
+          return;
+      }
       const filtered = MOCK_PRODUCTS.filter(p => 
         p.title.toLowerCase().includes(lowerQuery) || 
         p.productType.toLowerCase().includes(lowerQuery)
@@ -372,6 +376,13 @@ export async function createCustomer(email, password, firstName) {
       if (email.includes('error')) {
         reject(new Error('Email already exists.'));
       } else {
+        // Update MOCK_CUSTOMER
+        MOCK_CUSTOMER.firstName = firstName;
+        MOCK_CUSTOMER.lastName = ''; 
+        MOCK_CUSTOMER.email = email;
+        
+        saveMockData();
+
         resolve({
           id: 'gid://shopify/Customer/123',
           email: email,
@@ -394,17 +405,35 @@ export async function loginCustomer(email, password) {
       if (password === 'wrong') {
         reject(new Error('Invalid email or password.'));
       } else {
+        
+        // For the purpose of this mock demo:
+        // If the user logs in with an email that is DIFFERENT from the current mock data,
+        // we update the mock data to reflect this "new" user session.
+        if (MOCK_CUSTOMER.email !== email) {
+            MOCK_CUSTOMER.email = email;
+            // Optionally clear name if it's a "fresh" login for a different email, 
+            // but keeping it simple by just updating email for now or resetting to default "User"
+            if (!MOCK_CUSTOMER.firstName) MOCK_CUSTOMER.firstName = "User";
+            saveMockData();
+        }
+
         resolve({
           accessToken: 'mock-customer-access-token',
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString() // 1 day
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(), // 1 day
+          customerUser: {
+              name: MOCK_CUSTOMER.firstName + (MOCK_CUSTOMER.lastName ? ' ' + MOCK_CUSTOMER.lastName : ''),
+              email: MOCK_CUSTOMER.email
+          }
         });
       }
-    }, 1000);
+    }, 800);
   });
 }
 
 // Mock Customer Data
-const MOCK_CUSTOMER = {
+// Load from local storage or use default
+const storedCustomer = localStorage.getItem('mock_customer_data');
+const DEFAULT_MOCK_CUSTOMER = {
   id: 'gid://shopify/Customer/1',
   firstName: 'Alwin',
   lastName: 'Tom',
@@ -418,7 +447,11 @@ const MOCK_CUSTOMER = {
       zip: '682001',
       country: 'India',
       phone: '+91 98765 43210'
-  },
+  }
+};
+
+const MOCK_CUSTOMER = storedCustomer ? JSON.parse(storedCustomer) : {
+  ...DEFAULT_MOCK_CUSTOMER,
   addresses: [
       {
           id: 'gid://shopify/MailingAddress/1',
@@ -493,6 +526,10 @@ const MOCK_CUSTOMER = {
   }
 };
 
+const saveMockData = () => {
+    localStorage.setItem('mock_customer_data', JSON.stringify(MOCK_CUSTOMER));
+};
+
 /**
 * Fetch Customer Profile
 */
@@ -505,6 +542,27 @@ export async function fetchCustomerProfile() {
          email: MOCK_CUSTOMER.email,
          phone: MOCK_CUSTOMER.phone,
          imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300' // Placeholder
+      });
+    }, 600);
+  });
+}
+
+export async function updateCustomerProfile(updates) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (updates.firstName) MOCK_CUSTOMER.firstName = updates.firstName;
+      if (updates.lastName) MOCK_CUSTOMER.lastName = updates.lastName;
+      if (updates.email) MOCK_CUSTOMER.email = updates.email;
+      if (updates.phone) MOCK_CUSTOMER.phone = updates.phone;
+      
+      saveMockData();
+
+      resolve({
+         firstName: MOCK_CUSTOMER.firstName,
+         lastName: MOCK_CUSTOMER.lastName,
+         email: MOCK_CUSTOMER.email,
+         phone: MOCK_CUSTOMER.phone,
+         imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300'
       });
     }, 600);
   });

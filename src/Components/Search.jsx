@@ -73,21 +73,21 @@ export default function Search({ isOpen, onClose }) {
 
             {/* Search Container */}
             <div className="relative bg-black border-b border-white/10 shadow-2xl animate-in slide-in-from-top duration-300">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#FB7010" className="w-6 h-6">
+                <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center gap-2 md:gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#FB7010" className="w-6 h-6 shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
                     <input
                         ref={inputRef}
                         type="text"
-                        placeholder="Search for Rings, Bangles..."
-                        className="flex-1 bg-transparent text-white text-xl placeholder:text-neutral-500 focus:outline-none font-[Poppins]"
+                        placeholder="Search..."
+                        className="flex-1 bg-transparent text-white text-lg md:text-xl placeholder:text-neutral-500 focus:outline-none font-[Poppins] min-w-0"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
                     <button 
                         onClick={handleClose}
-                        className="p-2 text-neutral-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+                        className="p-2 text-neutral-400 hover:text-white transition-colors rounded-full hover:bg-white/10 shrink-0"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { fetchCustomerProfile } from '../services/shopify';
+import { setCookie, getCookie, eraseCookie } from '../utils/cookies';
 
 const AuthContext = createContext();
 
@@ -11,31 +13,47 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for existing session on mount
-        const token = localStorage.getItem('customerAccessToken');
-        if (token) {
-            // In a real app, you'd validate the token with an API call here.
-            // For now, we'll assume if the token exists, the user is logged in.
-            // We can try to fetch the customer profile if needed, but for the navbar toggle, existence is enough.
-            setUser({ email: "customer@example.com", name: "Valued Customer" }); 
-        }
-        setLoading(false);
+        const initAuth = async () => {
+             // Cookie is a safer place for Auth Tokens (in real apps, use HttpOnly)
+             const token = getCookie('customerAccessToken');
+             if (token) {
+                 try {
+                     const profile = await fetchCustomerProfile();
+                     setUser({
+                         name: profile.firstName + (profile.lastName ? ' ' + profile.lastName : ''),
+                         email: profile.email,
+                         ...profile
+                     });
+                 } catch (error) {
+                     console.error("Failed to restore session", error);
+                     eraseCookie('customerAccessToken');
+                 }
+             }
+             setLoading(false);
+        };
+        initAuth();
     }, []);
 
     const login = (token, userData) => {
-        localStorage.setItem('customerAccessToken', token);
+        // Store token in cookie for 1 day
+        setCookie('customerAccessToken', token, 1);
         setUser(userData || { email: "customer@example.com", name: "Valued Customer" });
     };
 
     const logout = () => {
-        localStorage.removeItem('customerAccessToken');
+        eraseCookie('customerAccessToken');
         setUser(null);
+    };
+
+    const updateUser = (userData) => {
+        setUser(prev => ({ ...prev, ...userData }));
     };
 
     const value = {
         user,
         login,
         logout,
+        updateUser,
         isAuthenticated: !!user,
         loading
     };
