@@ -26,14 +26,14 @@ export default function CategoryGrid(){
     return(
         <>
         <div className="mb-16">
-        <div className="text-white flex flex-col gap-6 text-center mt-10">
+        <div className="text-white flex flex-col gap-6 text-center w-[80vw] m-auto mt-10">
         <h1 className="font-Great_Vibes text-4xl md:text-6xl tracking-wide">Find your <span className="text-primary py-2">PERFECT</span> one</h1>
         <span className="text-xl md:mt-5">Shop by Category</span>
         </div>
         <div className="grid grid-cols-2 gap-8 w-[80vw] m-auto my-10">
             {categories.map((cat) => (
                 <div key={cat.handle} className="cursor-pointer" onClick={() => navigate(`/${cat.handle}`)}>
-                    <img src={cat.image.url} alt={cat.title} className="md:h-[30vw] h-[45vw] w-full object-cover rounded-2xl" />
+                    <img src={cat.image.url} alt={cat.title} className="md:h-[30vw] h-[50vw] w-full object-cover rounded-2xl" />
                     <h1 className="font-Poppins text-white text-center md:text-2xl text-xs mt-5">{cat.title}</h1>
                 </div>
             ))}
