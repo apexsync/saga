@@ -27,7 +27,7 @@ export default function CategoryGrid(){
         <>
         <div className="mb-16">
         <div className="text-white flex flex-col gap-6 text-center w-[80vw] m-auto mt-10">
-        <h1 className="font-Great_Vibes text-4xl md:text-6xl tracking-wide">Find your <span className="text-primary py-2">PERFECT</span> one</h1>
+        <h1 className="text-xl md:text-4xl tracking-wide">Find your <span className="text-primary py-2 text-3xl md:text-5xl font-Great_Vibes">PERFECT</span> one</h1>
         <span className="text-xl md:mt-5">Shop by Category</span>
         </div>
         <div className="grid grid-cols-2 gap-8 w-[80vw] m-auto my-10">

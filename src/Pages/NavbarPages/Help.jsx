@@ -58,7 +58,7 @@ const Help = () => {
                             </div>
                             <div>
                                 <p className="text-sm text-white/60 font-semibold mb-1">Email Us</p>
-                                <p className="text-lg font-bold text-white hover:text-primary cursor-pointer transition-colors">support@saga.com</p>
+                                <a href="mailto:sagakamya@gmail.com" className="text-lg font-bold text-white hover:text-primary cursor-pointer transition-colors">sagakamya@gmail.com</a>
                             </div>
                         </div>
 
@@ -70,7 +70,7 @@ const Help = () => {
                             </div>
                             <div>
                                 <p className="text-sm text-white/60 font-semibold mb-1">Call Us</p>
-                                <p className="text-lg font-bold text-white hover:text-primary cursor-pointer transition-colors">+91 1800 123 4567</p>
+                                <a href="tel:+919847294800" className="text-lg font-bold text-white hover:text-primary cursor-pointer transition-colors">+91 98472 94800</a>
                             </div>
                         </div>
 

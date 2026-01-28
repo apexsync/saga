@@ -34,7 +34,7 @@ function Footer() {
                     <h3 className="text-lg font-semibold tracking-wide text-primary">Contact</h3>
                     <div className="flex flex-col space-y-2 text-gray-400 text-sm md:text-right">
                         <a href="mailto:hello@saga.com" className="hover:text-white transition-colors cursor-default">sagakamya@gmail.com</a>
-                        <span className='hover:text-white cursor-default'>+91 98472 94800</span>
+                        <a href="tel:+919847294800" className='hover:text-white cursor-default'>+91 98472 94800</a>
                         <div className="pt-2 flex gap-4 justify-center md:justify-end">
                             {/* Social Icons */}
                             <a href="https://www.instagram.com/shopsaga_?igsh=MW5sbGt6ejJwbm9yZA==" className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white hover:bg-white/90 hover:text-black transition-all cursor-pointer group">

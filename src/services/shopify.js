@@ -223,6 +223,9 @@ const normalizeProduct = (product) => {
  * Fetch all products
  */
 export async function fetchAllProducts() {
+  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
+  // Example: client.product.fetchAll().then((products) => { ... });
+
   // Simulate network delay
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -235,18 +238,26 @@ export async function fetchAllProducts() {
  * Fetch all collections/categories
  */
 export async function fetchCollections() {
+  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
+  // Example: client.collection.fetchAllWithProducts().then((collections) => { ... });
+
   return new Promise((resolve) => {
     setTimeout(() => {
       // In a real app: use COLLECTIONS_QUERY
       resolve(MOCK_COLLECTIONS);
+
     }, 600);
   });
+
 }
 
 /**
  * Fetch Festive Edit Images (Mocking a content query)
  */
 export async function fetchFestiveEdit() {
+  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
+  // This might be a specific collection or content from a CMS.
+
   return new Promise((resolve) => {
     setTimeout(() => {
         resolve({
@@ -264,9 +275,11 @@ export async function fetchFestiveEdit() {
 
 /**
  * Fetch products by category (Product Type)
- * @param {string} category 
+ * TODO: Replace this mock implementation with actual Shopify Storefront API call.
+ * You might filter by collection or product type using a specific query.
+ * @param {string} category
  */
-export async function fetchProductsByCategory(category) {
+async function fetchProductsByCategory(category) {
   return new Promise((resolve) => {
     setTimeout(() => {
       const filtered = MOCK_PRODUCTS.filter(p => p.productType.toLowerCase() === category.toLowerCase());
@@ -275,11 +288,16 @@ export async function fetchProductsByCategory(category) {
   });
 }
 
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Example: client.product.fetchByHandle(handle).then((product) => { ... });
+
+  
 /**
  * Fetch a single product by handle
  * @param {string} handle 
  */
-export async function fetchProductByHandle(handle) {
+async function fetchProductByHandle(handle) {
+
   return new Promise((resolve) => {
     setTimeout(() => {
       const product = MOCK_PRODUCTS.find(p => p.handle === handle);
@@ -288,17 +306,21 @@ export async function fetchProductByHandle(handle) {
   });
 }
 
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Example: client.product.fetchQuery({ query: query }).then((products) => { ... });
+
+  
 /**
  * Search products by query
  * @param {string} query 
  */
-export async function searchProducts(query) {
+async function searchProducts(query) {
   return new Promise((resolve) => {
     setTimeout(() => {
       const lowerQuery = query.toLowerCase().trim();
       if (!lowerQuery) { // Early exit if empty after trim
-          resolve([]);
-          return;
+        resolve([]);
+        return;
       }
       const filtered = MOCK_PRODUCTS.filter(p => 
         p.title.toLowerCase().includes(lowerQuery) || 
@@ -309,6 +331,13 @@ export async function searchProducts(query) {
   });
 }
 
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Typically fetching a specific "Trending" collection.
+
+// Export functions at the end for compatibility
+export { fetchProductsByCategory, fetchProductByHandle, searchProducts };
+
+  
 /**
  * Fetch trending products
  * Returns a subset of products to be displayed in the trending section
@@ -319,9 +348,15 @@ export async function fetchTrendingProducts() {
       // Return specific items or just the first few as "trending"
       // In a real app, this might query a specific collection
       resolve(MOCK_PRODUCTS.slice(0, 7).map(normalizeProduct));
+
     }, 700);
   });
 }
+
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Example: client.checkout.create().then((checkout) => { ... });
+
+  
 
 /**
  * Create a checkout
@@ -337,6 +372,9 @@ export async function createCheckout() {
     }, 500);
   });
 }
+
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Example: client.checkout.addLineItems(checkoutId, lineItems).then((checkout) => { ... });
 
 /**
  * Add items to checkout
@@ -362,6 +400,9 @@ export async function addLineItems(checkoutId, lineItems) {
 //   domain: 'your-shop-name.myshopify.com',
 //   storefrontAccessToken: 'your-storefront-access-token'
 // });
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Note: Storefront API usually requires Customer Access Token creation for login, 
+// but creation might need a different mutation or be handled via Multipass/Admin API depending on setup.
 
 /**
  * Create a new customer (Sign Up)
@@ -389,6 +430,9 @@ export async function createCustomer(email, password, firstName) {
           firstName: firstName
         });
       }
+  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
+  // Example: creating a Customer Access Token.
+  
     }, 1000);
   });
 }
@@ -519,12 +563,15 @@ const MOCK_CUSTOMER = storedCustomer ? JSON.parse(storedCustomer) : {
           expiryYear: 25
       }
   ],
+
   settings: {
      marketing: true,
      orderUpdates: true,
      newsletter: false
   }
 };
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+// Fetch customer details using the access token.
 
 const saveMockData = () => {
     sessionStorage.setItem('mock_customer_data', JSON.stringify(MOCK_CUSTOMER));
@@ -535,6 +582,9 @@ const saveMockData = () => {
 */
 export async function fetchCustomerProfile() {
   return new Promise((resolve) => {
+  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
+  // Perform a customer update mutation.
+
     setTimeout(() => {
       resolve({
          firstName: MOCK_CUSTOMER.firstName,
@@ -556,7 +606,10 @@ export async function updateCustomerProfile(updates) {
       if (updates.phone) MOCK_CUSTOMER.phone = updates.phone;
       
       saveMockData();
+// TODO: Replace this mock implementation with actual Shopify Storefront API call.
+   // Fetch orders for the logged-in customer.
 
+   
       resolve({
          firstName: MOCK_CUSTOMER.firstName,
          lastName: MOCK_CUSTOMER.lastName,
@@ -577,6 +630,9 @@ export async function fetchCustomerOrders() {
       const orders = MOCK_CUSTOMER.orders.map(order => ({
         id: order.orderNumber, // Using number as ID for display
         date: new Date(order.processedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
+  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
+  // Fetch addresses for the logged-in customer.
+
         status: order.fulfillmentStatus === 'FULFILLED' ? 'Delivered' : 'In Transit', // Mapping status
         total: formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode),
         items: order.lineItems.map(item => ({
@@ -684,6 +740,7 @@ export async function deleteCustomerAddress(addressId) {
  * @param {string} addressId 
  * @param {object} updatedAddress 
  */
+
 export async function updateCustomerAddress(addressId, updatedAddress) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -696,3 +753,4 @@ export async function updateCustomerAddress(addressId, updatedAddress) {
     }, 600);
   });
 }
+
