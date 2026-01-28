@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FB7010;
+  --font-Great_Vibes: "Great_Vibes", cursive;
+  --font-Poppins: "Poppins", sans-serif;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/Poppins/Poppins-Regular.ttf");
+}
+@font-face {
+  font-family: "Great_Vibes";
+  src: url("./assets/Great_Vibes/GreatVibes-Regular.ttf");
+}
+body {
+  font-family: "Poppins","Great_Vibes", sans-serif;
+}
+
+
+
