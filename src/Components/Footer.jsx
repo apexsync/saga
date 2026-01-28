@@ -33,11 +33,11 @@ function Footer() {
                 <div className="flex flex-col items-center md:items-end space-y-4">
                     <h3 className="text-lg font-semibold tracking-wide text-primary">Contact</h3>
                     <div className="flex flex-col space-y-2 text-gray-400 text-sm md:text-right">
-                        <a href="mailto:hello@saga.com" className="hover:text-white transition-colors">hello@saga.com</a>
-                        <span>+1 (555) 123-4567</span>
+                        <a href="mailto:hello@saga.com" className="hover:text-white transition-colors cursor-default">sagakamya@gmail.com</a>
+                        <span className='hover:text-white cursor-default'>+91 98472 94800</span>
                         <div className="pt-2 flex gap-4 justify-center md:justify-end">
                             {/* Social Icons */}
-                            <a href="#" className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white hover:bg-white/90 hover:text-black transition-all cursor-pointer group">
+                            <a href="https://www.instagram.com/shopsaga_?igsh=MW5sbGt6ejJwbm9yZA==" className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white hover:bg-white/90 hover:text-black transition-all cursor-pointer group">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-primary transition-colors">
                                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -47,12 +47,6 @@ function Footer() {
                             <a href="#" className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white hover:bg-white/90 hover:text-black transition-all cursor-pointer group">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-primary transition-colors">
                                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                                </svg>
-                            </a>
-                            <a href="mailto:hello@saga.com" className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-white hover:bg-white/90 hover:text-black transition-all cursor-pointer group">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-primary transition-colors">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                    <polyline points="22,6 12,13 2,6"></polyline>
                                 </svg>
                             </a>
                         </div>

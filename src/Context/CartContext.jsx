@@ -7,9 +7,9 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  // Load cart from localStorage on mount
+  // Load cart from sessionStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('saga_cart');
+    const savedCart = sessionStorage.getItem('saga_cart');
     if (savedCart) {
       try {
         setCartItems(JSON.parse(savedCart));
@@ -19,9 +19,9 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  // Save cart to sessionStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('saga_cart', JSON.stringify(cartItems));
+    sessionStorage.setItem('saga_cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
   const parsePrice = (price) => {

@@ -431,8 +431,8 @@ export async function loginCustomer(email, password) {
 }
 
 // Mock Customer Data
-// Load from local storage or use default
-const storedCustomer = localStorage.getItem('mock_customer_data');
+// Load from session storage or use default
+const storedCustomer = sessionStorage.getItem('mock_customer_data');
 const DEFAULT_MOCK_CUSTOMER = {
   id: 'gid://shopify/Customer/1',
   firstName: 'Alwin',
@@ -527,7 +527,7 @@ const MOCK_CUSTOMER = storedCustomer ? JSON.parse(storedCustomer) : {
 };
 
 const saveMockData = () => {
-    localStorage.setItem('mock_customer_data', JSON.stringify(MOCK_CUSTOMER));
+    sessionStorage.setItem('mock_customer_data', JSON.stringify(MOCK_CUSTOMER));
 };
 
 /**
