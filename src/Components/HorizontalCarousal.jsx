@@ -96,7 +96,7 @@ export default function HorizontalCarousal(){
             <div className="mt-8 relative w-[90vw] m-auto">
                 <div 
                     ref={scrollRef}
-                    className="overflow-x-auto whitespace-nowrap py-10 px-5 flex gap-8 w-full no-scrollbar cursor-grab select-none"
+                    className="overflow-x-auto whitespace-nowrap py-10 md:px-5 flex gap-8 w-full no-scrollbar cursor-grab select-none"
                     onMouseDown={handleMouseDown}
                     onMouseLeave={handleMouseLeave}
                     onMouseUp={handleMouseUp}

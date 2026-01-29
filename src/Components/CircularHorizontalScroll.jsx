@@ -66,16 +66,16 @@ function CircularHorizontalScroll() {
 
       <div 
         ref={scrollRef}
-        className="flex overflow-x-auto whitespace-nowrap py-4 no-scrollbar scroll-smooth w-full px-8"
+        className="flex overflow-x-auto whitespace-nowrap py-4 no-scrollbar scroll-smooth w-full md:px-8"
       >
         {/* Render items multiple times for scrolling feel */}
         {[...categories, ...categories].map((category, index) => (
           <div 
             key={`${category.id}-${index}`} 
-            className="shrink-0 flex flex-col items-center gap-3 group mx-4 w-24 cursor-pointer"
+            className="shrink-0 flex flex-col items-center gap-3 group mx-4 w-20 md:w-24 cursor-pointer"
             onClick={() => handleCategoryClick(category.handle)}
           >
-            <div className="w-24 h-24 rounded-full bg-zinc-900 shadow-lg flex items-center justify-center border-2 border-zinc-800 group-hover:border-primary group-hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-zinc-900 shadow-lg flex items-center justify-center border-2 border-zinc-800 group-hover:border-primary group-hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden">
               <img 
                 src={category.image} 
                 alt={category.name} 

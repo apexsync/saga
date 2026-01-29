@@ -17,6 +17,14 @@
 body {
   font-family: "Poppins","Great_Vibes", sans-serif;
 }
+html, body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 
 

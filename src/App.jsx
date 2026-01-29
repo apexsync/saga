@@ -24,7 +24,11 @@ function App() {
 
   return (
     <>
-    <div className='bg-linear-to-b from-black to-[#7D4E2E] min-h-screen'>
+    <div className='min-h-screen'
+    style={{
+    minHeight: "100vh",
+    background: "linear-gradient(to bottom, black 5%, #7D4E2E 95%)"
+  }}>
     <Navbar />
     <Routes>
       <Route path="/" element={<Home />} />

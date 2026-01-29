@@ -30,10 +30,10 @@ export default function CategoryGrid(){
         <h1 className="text-xl md:text-4xl tracking-wide">Find your <span className="text-primary py-2 text-3xl md:text-5xl font-Great_Vibes">PERFECT</span> one</h1>
         <span className="text-xl md:mt-5">Shop by Category</span>
         </div>
-        <div className="grid grid-cols-2 gap-8 w-[80vw] m-auto my-10">
+        <div className="grid grid-cols-2 gap-8 w-[90vw] md:w-[80vw] m-auto my-10">
             {categories.map((cat) => (
                 <div key={cat.handle} className="cursor-pointer" onClick={() => navigate(`/${cat.handle}`)}>
-                    <img src={cat.image.url} alt={cat.title} className="md:h-[30vw] h-[50vw] w-full object-cover rounded-2xl" />
+                    <img src={cat.image.url} alt={cat.title} className=" h-[50vw]  md:h-[30vw] w-full object-cover rounded-2xl" />
                     <h1 className="font-Poppins text-white text-center md:text-2xl text-xs mt-5">{cat.title}</h1>
                 </div>
             ))}

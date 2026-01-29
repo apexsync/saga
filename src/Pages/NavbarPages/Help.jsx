@@ -2,7 +2,7 @@ import React from 'react';
 
 const Help = () => {
     return (
-        <div className="pt-24 min-h-screen bg-black text-white container mx-auto px-4 md:px-10 mb-10">
+        <div className="pt-24 min-h-screen w-full text-white container mx-auto px-4 md:px-10 mb-10">
             <h1 className="text-3xl font-bold mb-8 text-primary border-b-2 border-primary pb-2 inline-block">Help & Support</h1>
 
             <div className="grid md:grid-cols-2 gap-10">
