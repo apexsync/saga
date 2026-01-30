@@ -41,7 +41,7 @@ const ProductPageLayout = ({ title, products }) => {
   return (
     <div className="pt-28 pb-10 px-4 min-h-screen bg-black">
           <CircularHorizontalScroll />
-      <div className="max-w-7xl mx-auto mb-6 ml-4 md:ml-0 mt-6 text-zinc-400 text-sm font-medium">
+      <div className="w-[90vw] m-auto text-zinc-400 text-sm font-medium p-4">
         <Link to="/" className="hover:text-primary transition-colors">Home</Link>
         <span className="mx-2">•</span>
         <span className="text-white">{title}</span>
