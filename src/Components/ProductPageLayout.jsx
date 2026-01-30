@@ -41,19 +41,19 @@ const ProductPageLayout = ({ title, products }) => {
   return (
     <div className="pt-28 pb-10 px-4 min-h-screen bg-black">
           <CircularHorizontalScroll />
-      <div className="max-w-7xl mx-auto mb-6 text-zinc-400 text-sm font-medium">
+      <div className="max-w-7xl mx-auto mb-6 ml-4 md:ml-0 mt-6 text-zinc-400 text-sm font-medium">
         <Link to="/" className="hover:text-primary transition-colors">Home</Link>
         <span className="mx-2">•</span>
         <span className="text-white">{title}</span>
       </div>
-      <h1 className="text-white text-center font-Great_Vibes text-6xl mb-12 tracking-wider">{title}</h1>
+      <h1 className="text-white text-center font-Great_Vibes text-6xl mb-12 mt-10 md:mt-0 tracking-wider">{title}</h1>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {products.map((item) => (
           <div 
             key={item.id} 
             onMouseEnter={() => setHoveredId(item.id)}
             onMouseLeave={() => setHoveredId(null)}
-            className={`bg-zinc-900 rounded-xl overflow-hidden shadow-lg transition-all duration-500 cursor-pointer border border-zinc-800 group flex flex-col h-[22rem] md:h-auto
+            className={`bg-zinc-900 rounded-xl overflow-hidden shadow-lg transition-all duration-500 cursor-pointer border border-zinc-800 group flex flex-col h-[18rem] md:h-auto
             hover:scale-105 hover:z-10 hover:shadow-primary/50 hover:border-primary
             ${showBlur && hoveredId !== item.id ? 'md:blur-sm' : ''}
             `}
