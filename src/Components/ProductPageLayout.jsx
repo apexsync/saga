@@ -58,7 +58,7 @@ const ProductPageLayout = ({ title, products }) => {
             ${showBlur && hoveredId !== item.id ? 'md:blur-sm' : ''}
             `}
           >
-            <div className="h-2/3 md:h-64 overflow-hidden relative">
+            <div className="h-1/2 md:h-64 overflow-hidden relative">
               <img 
                 src={item.image} 
                 alt={item.name} 
@@ -66,7 +66,7 @@ const ProductPageLayout = ({ title, products }) => {
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
             </div>
-            <div className="p-3 md:p-5 flex flex-col justify-center h-1/3 md:h-auto gap-2 md:gap-3">
+            <div className="p-3 md:p-5 flex flex-col justify-center h-1/2 md:h-auto gap-2 md:gap-3">
               <h3 className="text-white text-lg md:text-xl font-Poppins tracking-wide text-center group-hover:text-primary transition-colors line-clamp-1">{item.name}</h3>
               <p className="text-zinc-400 text-center font-semibold text-sm md:text-base group-hover:text-white">{item.price}</p>
               <button 
