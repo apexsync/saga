@@ -1,26 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCustomerOrders } from '../../services/shopify';
+import { useAuth } from '../../Context/AuthContext';
+import { fetchUserOrders } from '../../services/orderService';
 
 const MyOrders = () => {
+    const { user } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadOrders = async () => {
-            try {
-                const data = await fetchCustomerOrders();
-                setOrders(data);
-            } catch (error) {
-                console.error("Failed to fetch orders", error);
-            } finally {
+            if (user) {
+                try {
+                    const userOrders = await fetchUserOrders(user.id);
+                    setOrders(userOrders);
+                } catch (error) {
+                    console.error("Error loading orders:", error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
                 setLoading(false);
             }
         };
+
         loadOrders();
-    }, []);
+    }, [user]);
 
     if (loading) {
-        return <div className="pt-32 text-center text-white">Loading your orders...</div>;
+        return (
+            <div className="pt-24 min-h-screen text-white container mx-auto px-4 md:px-10 flex justify-center items-center">
+                <div className="text-xl">Loading your orders...</div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="pt-24 min-h-screen text-white container mx-auto px-4 md:px-10 flex flex-col justify-center items-center">
+                <h2 className="text-2xl mb-4">Please sign in to view your orders.</h2>
+            </div>
+        );
     }
 
     return (
@@ -45,11 +64,10 @@ const MyOrders = () => {
                                     </div>
                                     <div>
                                         <p className="text-white/60 font-medium">Order ID</p>
-                                        <p className="font-semibold text-white">#{order.id}</p>
+                                        <p className="font-semibold text-white">#{order.id.slice(0, 8)}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-center">
-                                    <button className="text-primary hover:text-white transition-colors font-semibold text-sm border-b border-transparent hover:border-white">View Invoice</button>
                                     <div className={`px-3 py-1 rounded-full text-xs font-bold ring-1 ${
                                         order.status === 'Delivered' ? 'bg-green-900/40 text-green-400 ring-green-600' : 'bg-primary/20 text-primary ring-primary'
                                     }`}>
@@ -70,18 +88,20 @@ const MyOrders = () => {
                                         </div>
                                         <div className="flex-grow text-center sm:text-left">
                                             <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">{item.name}</h3>
-                                            <p className="text-white/50 text-sm mt-1">Return window closed on {order.date}</p>
+                                            <p className="text-white/50 text-sm mt-1">Status: {order.status}</p>
                                         </div>
                                         <div className="flex gap-2 w-full sm:w-auto">
                                             <button className="flex-1 sm:flex-none px-4 py-2 border border-white text-white rounded text-sm font-semibold hover:bg-white hover:text-black transition-colors">
                                                 Track
                                             </button>
-                                            <button className="flex-1 sm:flex-none px-4 py-2 bg-primary text-white border border-primary rounded text-sm font-semibold hover:bg-black hover:text-primary transition-colors">
-                                                Buy Again
-                                            </button>
                                         </div>
                                     </div>
                                 ))}
+                                
+                                <div className="mt-4 pt-4 border-t border-white/10 text-xs text-white/40">
+                                    <p>Delivering to: {order.address.street}, {order.address.city}, {order.address.zip}</p>
+                                    <p>Payment ID: {order.paymentId}</p>
+                                </div>
                             </div>
                         </div>
                     ))}

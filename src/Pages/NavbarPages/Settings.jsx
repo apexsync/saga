@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { fetchCustomerSettings } from '../../services/shopify';
+import React, { useState } from 'react';
+// Settings — placeholder, can be implemented with Firestore later
 
 const Settings = () => {
     const [notifications, setNotifications] = useState({
@@ -7,27 +7,8 @@ const Settings = () => {
         orderUpdates: true,
         newsletter: false
     });
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const loadSettings = async () => {
-            try {
-                const settings = await fetchCustomerSettings();
-                if (settings) {
-                    setNotifications(settings);
-                }
-            } catch (error) {
-                console.error("Failed to load settings", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadSettings();
-    }, []);
 
-    if (loading) {
-        return <div className="pt-32 text-center text-white">Loading settings...</div>;
-    }
 
     return (
         <div className="pt-24 min-h-screen text-white container mx-auto px-4 md:px-10 mb-10">

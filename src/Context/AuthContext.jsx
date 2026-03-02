@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { fetchCustomerProfile } from '../services/shopify';
-import { setCookie, getCookie, eraseCookie } from '../utils/cookies';
+import { getCurrentUser, onAuthChange, logoutCustomer } from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -13,35 +12,32 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const initAuth = async () => {
-             // Cookie is a safer place for Auth Tokens (in real apps, use HttpOnly)
-             const token = getCookie('customerAccessToken');
-             if (token) {
-                 try {
-                     const profile = await fetchCustomerProfile();
-                     setUser({
-                         name: profile.firstName + (profile.lastName ? ' ' + profile.lastName : ''),
-                         email: profile.email,
-                         ...profile
-                     });
-                 } catch (error) {
-                     console.error("Failed to restore session", error);
-                     eraseCookie('customerAccessToken');
-                 }
-             }
-             setLoading(false);
-        };
-        initAuth();
+        // Firebase Auth state observer — automatically handles session persistence
+        const unsubscribe = onAuthChange((firebaseUser) => {
+            if (firebaseUser) {
+                setUser({
+                    id: firebaseUser.id,
+                    name: firebaseUser.name,
+                    email: firebaseUser.email,
+                });
+            } else {
+                setUser(null);
+            }
+            setLoading(false);
+        });
+
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
     }, []);
 
-    const login = (token, userData) => {
-        // Store token in cookie for 1 day
-        setCookie('customerAccessToken', token, 1);
-        setUser(userData || { email: "customer@example.com", name: "Valued Customer" });
+    const login = (userData) => {
+        // Firebase Auth handles persistence automatically via onAuthChange
+        // This is called after successful loginCustomer() to immediately update state
+        setUser(userData);
     };
 
-    const logout = () => {
-        eraseCookie('customerAccessToken');
+    const logout = async () => {
+        await logoutCustomer();
         setUser(null);
     };
 

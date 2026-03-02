@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCustomerAddresses, addCustomerAddress, deleteCustomerAddress, updateCustomerAddress } from '../../services/shopify';
+import { useAuth } from '../../Context/AuthContext';
+import { 
+    fetchUserAddresses, 
+    saveAddress, 
+    updateAddress, 
+    removeAddress 
+} from '../../services/addressService';
 
 const DeliveryAddress = () => {
+    const { user } = useAuth();
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,17 +26,21 @@ const DeliveryAddress = () => {
 
     useEffect(() => {
         const loadAddresses = async () => {
-             try {
-                const data = await fetchCustomerAddresses();
-                setAddresses(data);
-            } catch (error) {
-                console.error("Failed to fetch addresses", error);
-            } finally {
+            if (user) {
+                try {
+                    const data = await fetchUserAddresses(user.id);
+                    setAddresses(data);
+                } catch (error) {
+                    console.error("Failed to load addresses", error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
                 setLoading(false);
             }
         };
         loadAddresses();
-    }, []);
+    }, [user]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -74,32 +85,39 @@ const DeliveryAddress = () => {
         e.preventDefault();
         try {
             if (isEditMode) {
-                const updated = await updateCustomerAddress(editAddressId, newAddress);
-                setAddresses(addresses.map(addr => addr.id === editAddressId ? updated : addr));
+                await updateAddress(editAddressId, newAddress);
+                setAddresses(addresses.map(addr => 
+                    addr.id === editAddressId ? { ...newAddress, id: editAddressId } : addr
+                ));
             } else {
-                const addedAddress = await addCustomerAddress(newAddress);
-                setAddresses([...addresses, addedAddress]);
+                const saved = await saveAddress(user.id, newAddress);
+                setAddresses([...addresses, saved]);
             }
             setIsModalOpen(false);
             resetForm();
         } catch (error) {
-            console.error(isEditMode ? "Failed to update address" : "Failed to add address", error);
+            alert("Failed to save address. Please try again.");
+            console.error(error);
         }
     };
 
     const handleDeleteAddress = async (id) => {
         if (window.confirm("Are you sure you want to delete this address?")) {
             try {
-                await deleteCustomerAddress(id);
+                await removeAddress(id);
                 setAddresses(addresses.filter(addr => addr.id !== id));
             } catch (error) {
-                console.error("Failed to delete address", error);
+                alert("Failed to delete address.");
             }
         }
     };
 
     if (loading) {
-        return <div className="pt-32 text-center text-white">Loading addresses...</div>;
+        return <div className="pt-32 min-h-screen text-center text-white">Loading addresses...</div>;
+    }
+
+    if (!user) {
+        return <div className="pt-32 min-h-screen text-center text-white">Please sign in to manage addresses.</div>;
     }
 
     return (
@@ -119,10 +137,7 @@ const DeliveryAddress = () => {
             ) : (
                 <div className="grid md:grid-cols-2 gap-6">
                     {addresses.map((addr) => (
-                        <div key={addr.id} className={`bg-black p-6 rounded-lg  border ${addr.isDefault ? 'border-primary ring-1 ring-primary' : 'border-white'} relative group`}>
-                            {addr.isDefault && (
-                                <span className="absolute top-4 right-4 text-xs font-bold text-black bg-primary px-2 py-1 rounded">DEFAULT</span>
-                            )}
+                        <div key={addr.id} className="bg-black p-6 rounded-lg border border-white relative group">
                             <div className="flex justify-between items-start mb-4">
                                 <span className="bg-white/10 border border-white/20 text-white text-xs px-2 py-1 rounded uppercase font-bold tracking-wide">{addr.type}</span>
                             </div>
@@ -145,15 +160,12 @@ const DeliveryAddress = () => {
                                     Delete
                                 </button>
                             </div>
-                            {!addr.isDefault && (
-                                <button className="w-full mt-3 text-sm text-white/60 hover:text-primary transition-colors">Set as Default</button>
-                            )}
                         </div>
                     ))}
                 </div>
             )}
 
-            {/* Add/Edit Address Modal */}
+            {/* Modal remains the same */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                     <div className="bg-black border border-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">

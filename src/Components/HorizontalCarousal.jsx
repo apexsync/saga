@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { fetchTrendingProducts } from '../services/shopify';
+import { fetchTrendingProducts } from '../services/products';
 
 export default function HorizontalCarousal(){
     const [items, setItems] = useState([]);

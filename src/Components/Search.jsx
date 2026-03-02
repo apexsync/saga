@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { searchProducts } from '../services/shopify';
+import { searchProducts } from '../services/products';
 
 export default function Search({ isOpen, onClose }) {
     const [query, setQuery] = useState('');

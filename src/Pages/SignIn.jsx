@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginCustomer } from '../services/shopify';
+import { loginCustomer } from '../services/authService';
 import { useAuth } from '../Context/AuthContext';
 
 const SignIn = () => {
@@ -24,11 +24,11 @@ const SignIn = () => {
     setError(null);
 
     try {
-        const response = await loginCustomer(formData.email, formData.password);
-        // Store token via Context
-        login(response.accessToken, response.customerUser);
+        const userData = await loginCustomer(formData.email, formData.password);
+        // Firebase Auth handles session persistence automatically
+        login(userData);
         
-        // Navigate to home or account page
+        // Navigate to home
         navigate('/');
     } catch (err) {
         setError(err.message || "Failed to sign in");

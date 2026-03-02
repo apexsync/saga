@@ -1,30 +1,24 @@
 
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchCollections } from '../services/shopify';
+
+// Static category data — these are the fixed categories in the store
+const CATEGORIES = [
+  { id: 'bangles', name: 'Bangles', handle: 'bangles', image: '/pl1.jpg' },
+  { id: 'bracelets', name: 'Bracelets', handle: 'bracelets', image: '/pl2.jpg' },
+  { id: 'earrings', name: 'Earrings', handle: 'earrings', image: '/pl1.jpg' },
+  { id: 'necklaces', name: 'Necklaces', handle: 'necklaces', image: '/pl2.jpg' },
+  { id: 'pendants', name: 'Pendants', handle: 'pendants', image: '/pl1.jpg' },
+  { id: 'rings', name: 'Rings', handle: 'rings', image: '/pl2.jpg' },
+];
 
 function CircularHorizontalScroll() {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    const loadData = async () => {
-        const data = await fetchCollections();
-        // Duplicate data to ensure enough items for scrolling if needed
-        // Mapping to match the component's expected structure if necessary, 
-        // but easier to just use the new structure directly in JSX
-        const mapped = data.map((c, index) => ({
-            id: c.handle,
-            name: c.title,
-            image: c.image.url,
-            handle: c.handle
-        }));
-        setCategories([...mapped, ...mapped]); // Duplicating for scroll effect
-    };
-    loadData();
-  }, []);
+  // Duplicate for infinite scroll effect
+  const categories = [...CATEGORIES, ...CATEGORIES];
 
   const handleCategoryClick = (handle) => {
     navigate(`/${handle}`);
@@ -68,7 +62,6 @@ function CircularHorizontalScroll() {
         ref={scrollRef}
         className="flex overflow-x-auto whitespace-nowrap py-4 no-scrollbar scroll-smooth w-full md:px-8"
       >
-        {/* Render items multiple times for scrolling feel */}
         {[...categories, ...categories].map((category, index) => (
           <div 
             key={`${category.id}-${index}`} 

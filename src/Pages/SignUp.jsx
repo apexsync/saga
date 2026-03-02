@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createCustomer } from '../services/shopify';
+import { registerCustomer } from '../services/authService';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const SignUp = () => {
     setError(null);
 
     try {
-        await createCustomer(formData.email, formData.password, formData.name);
+        await registerCustomer(formData.email, formData.password, formData.name);
         // On success, redirect to sign in
         navigate('/signin');
     } catch (err) {

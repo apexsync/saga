@@ -1,203 +1,28 @@
 /**
- * Mock Shopify Service
+ * Shopify Service
  * 
- * This file acts as a mock for the Shopify Storefront API.
- * In a real application, this would use a library like 'shopify-buy' 
- * or direct GraphQL calls to fetch data from your Shopify store.
+ * This file connects to the Shopify Storefront API using the 'shopify-buy' SDK
+ * and direct GraphQL queries for customer authentication and management.
  */
 
-// GraphQL Queries for Reference (or use with a real client)
-export const PRODUCTS_QUERY = `
-  query getProducts($first: Int!) {
-    products(first: $first) {
-      edges {
-        node {
-          id
-          title
-          handle
-          productType
-          images(first: 1) {
-            edges {
-              node {
-                src
-                altText
-              }
-            }
-          }
-          variants(first: 1) {
-            edges {
-              node {
-                price {
-                  amount
-                  currencyCode
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import Client from 'shopify-buy';
 
-export const COLLECTIONS_QUERY = `
-  query getCollections($first: Int!) {
-    collections(first: $first) {
-      edges {
-        node {
-          id
-          title
-          handle
-          image {
-            url
-            altText
-          }
-        }
-      }
-    }
-  }
-`;
+// Initialize the Shopify Client
+// Make sure to set these environment variables in your .env file
+const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+const storefrontAccessToken = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-// Mock Data - mimicking what we might get and normalize from Shopify
-const MOCK_COLLECTIONS = [
-    { title: 'Rings', handle: 'rings', image: { url: '/ring.jpg' } },
-    { title: 'Bangles', handle: 'bangles', image: { url: '/bangles.jpg' } },
-    { title: 'Necklaces', handle: 'necklaces', image: { url: '/necklace.jpg' } },
-    { title: 'Earrings', handle: 'earrings', image: { url: '/earring.jpg' } },
-    { title: 'Bracelets', handle: 'bracelets', image: { url: '/bracelets.jpg' } },
-    { title: 'Pendants', handle: 'pendants', image: { url: '/pendant.jpg' } }
-];
+// Validation for credentials
+if (!domain || !storefrontAccessToken) {
+  console.warn("Shopify credentials missing! Please check your .env file.");
+}
 
-const MOCK_PRODUCTS = [
-  // Rings
-  { 
-    id: 'gid://shopify/Product/1', 
-    title: 'Gold Ring', 
-    handle: 'gold-ring',
-    productType: 'Ring',
-    images: [{ src: '/ring.jpg' }], 
-    variants: [{ price: { amount: '25000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/2', 
-    title: 'Diamond Solitaire', 
-    handle: 'diamond-solitaire',
-    productType: 'Ring',
-    images: [{ src: '/ring.jpg' }], 
-    variants: [{ price: { amount: '65000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/3', 
-    title: 'Silver Ring', 
-    handle: 'silver-ring',
-    productType: 'Ring',
-    images: [{ src: '/ring.jpg' }], 
-    variants: [{ price: { amount: '12000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/4', 
-    title: 'Rose Gold Ring', 
-    handle: 'rose-gold-ring',
-    productType: 'Ring',
-    images: [{ src: '/ring.jpg' }], 
-    variants: [{ price: { amount: '30000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/5', 
-    title: 'Antique Ring', 
-    handle: 'antique-ring',
-    productType: 'Ring',
-    images: [{ src: '/ring.jpg' }], 
-    variants: [{ price: { amount: '40000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/6', 
-    title: 'Platinum Ring', 
-    handle: 'platinum-ring',
-    productType: 'Ring',
-    images: [{ src: '/ring.jpg' }], 
-    variants: [{ price: { amount: '55000', currencyCode: 'INR' } }] 
-  },
-  // Necklaces
-  { 
-    id: 'gid://shopify/Product/7', 
-    title: 'Gold Necklace', 
-    handle: 'gold-necklace',
-    productType: 'Necklace',
-    images: [{ src: '/necklace.jpg' }], 
-    variants: [{ price: { amount: '85000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/8', 
-    title: 'Diamond Necklace', 
-    handle: 'diamond-necklace',
-    productType: 'Necklace',
-    images: [{ src: '/necklace.jpg' }], 
-    variants: [{ price: { amount: '125000', currencyCode: 'INR' } }] 
-  },
-  // Bangles
-  { 
-    id: 'gid://shopify/Product/9', 
-    title: 'Gold Bangle', 
-    handle: 'gold-bangle', 
-    productType: 'Bangle', 
-    images: [{ src: '/bangles.jpg' }], 
-    variants: [{ price: { amount: '45000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/10', 
-    title: 'Diamond Bangle', 
-    handle: 'diamond-bangle', 
-    productType: 'Bangle', 
-    images: [{ src: '/bangles.jpg' }], 
-    variants: [{ price: { amount: '65000', currencyCode: 'INR' } }] 
-  },
-  // Earrings
-    { 
-    id: 'gid://shopify/Product/11', 
-    title: 'Gold Earrings', 
-    handle: 'gold-earrings', 
-    productType: 'Earring', 
-    images: [{ src: '/earring.jpg' }], 
-    variants: [{ price: { amount: '15000', currencyCode: 'INR' } }] 
-  },
-  // Bracelets
-  { 
-    id: 'gid://shopify/Product/12', 
-    title: 'Gold Bracelet', 
-    handle: 'gold-bracelet', 
-    productType: 'Bracelet', 
-    images: [{ src: '/bracelets.jpg' }], 
-    variants: [{ price: { amount: '45000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/13', 
-    title: 'Diamond Bracelet', 
-    handle: 'diamond-bracelet', 
-    productType: 'Bracelet', 
-    images: [{ src: '/bracelets.jpg' }], 
-    variants: [{ price: { amount: '65000', currencyCode: 'INR' } }] 
-  },
-  // Pendants
-  { 
-    id: 'gid://shopify/Product/14', 
-    title: 'Gold Pendant', 
-    handle: 'gold-pendant', 
-    productType: 'Pendant', 
-    images: [{ src: '/pendant.jpg' }], 
-    variants: [{ price: { amount: '15000', currencyCode: 'INR' } }] 
-  },
-  { 
-    id: 'gid://shopify/Product/15', 
-    title: 'Diamond Pendant', 
-    handle: 'diamond-pendant', 
-    productType: 'Pendant', 
-    images: [{ src: '/pendant.jpg' }], 
-    variants: [{ price: { amount: '35000', currencyCode: 'INR' } }] 
-  },
-];
+export const client = Client.buildClient({
+  domain: domain || 'mock-shop.myshopify.com',
+  storefrontAccessToken: storefrontAccessToken || 'mock-token'
+});
 
-// Helper to format price
+// Helper to format price from Shopify's format to app format
 const formatPrice = (amount, currencyCode) => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -207,7 +32,7 @@ const formatPrice = (amount, currencyCode) => {
   }).format(amount);
 };
 
-// Helper to normalize Shopify data to our app's internal format
+// Helper to normalize Shopify Product to App Product
 const normalizeProduct = (product) => {
   return {
     id: product.id,
@@ -216,6 +41,8 @@ const normalizeProduct = (product) => {
     image: product.images[0]?.src || '',
     price: formatPrice(product.variants[0].price.amount, product.variants[0].price.currencyCode),
     category: product.productType,
+    description: product.descriptionHtml || product.description,
+    variants: product.variants
   };
 };
 
@@ -223,158 +50,135 @@ const normalizeProduct = (product) => {
  * Fetch all products
  */
 export async function fetchAllProducts() {
-  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
-  // Example: client.product.fetchAll().then((products) => { ... });
-
-  // Simulate network delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_PRODUCTS.map(normalizeProduct));
-    }, 800);
-  });
+  try {
+    const products = await client.product.fetchAll();
+    return products.map(normalizeProduct);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
 }
 
 /**
- * Fetch all collections/categories
+ * Fetch all collections
  */
 export async function fetchCollections() {
-  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
-  // Example: client.collection.fetchAllWithProducts().then((collections) => { ... });
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // In a real app: use COLLECTIONS_QUERY
-      resolve(MOCK_COLLECTIONS);
-
-    }, 600);
-  });
-
+  try {
+    const collections = await client.collection.fetchAllWithProducts();
+    return collections.map(collection => ({
+      id: collection.id,
+      title: collection.title,
+      handle: collection.handle,
+      image: collection.image ? { url: collection.image.src, altText: collection.image.altText } : null,
+      products: collection.products.map(normalizeProduct)
+    }));
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    return [];
+  }
 }
 
 /**
- * Fetch Festive Edit Images (Mocking a content query)
+ * Fetch products by category (Product Type)
+ * @param {string} category
+ */
+export async function fetchProductsByCategory(category) {
+  try {
+    // Note: Storefront API doesn't have a direct "fetch by product type" 
+    // effectively without using a search query or iterating.
+    // We will use a query here.
+    const query = `product_type:${category}`;
+    const products = await client.product.fetchQuery({ query: query });
+    return products.map(normalizeProduct);
+  } catch (error) {
+    console.error(`Error fetching products for category ${category}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch a single product by handle
+ * @param {string} handle 
+ */
+export async function fetchProductByHandle(handle) {
+  try {
+    const product = await client.product.fetchByHandle(handle);
+    return product ? normalizeProduct(product) : null;
+  } catch (error) {
+    console.error(`Error fetching product ${handle}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Search products by query
+ * @param {string} query 
+ */
+export async function searchProducts(query) {
+  try {
+    const products = await client.product.fetchQuery({ query: `title:*${query}*` });
+    return products.map(normalizeProduct);
+  } catch (error) {
+    console.error("Error searching products:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch trending products
+ * (Fetches a specific collection or first 8 products)
+ */
+export async function fetchTrendingProducts() {
+  try {
+    // Alternatively, fetch a specific collection by handle 'trending'
+    // const collection = await client.collection.fetchByHandle('trending');
+    // return collection.products.map(normalizeProduct);
+    
+    // For now, just return the first few products
+    const products = await client.product.fetchAll(8);
+    return products.map(normalizeProduct);
+  } catch (error) {
+    console.error("Error fetching trending products:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch Festive Edit (Mock/CMS content)
+ * Since this is often CMS specific, we might keep it mock or use a specific collection
  */
 export async function fetchFestiveEdit() {
-  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
-  // This might be a specific collection or content from a CMS.
-
-  return new Promise((resolve) => {
+   // This is likely CMS content, so we might not have a direct Shopify equivalent 
+   // without a Metafield or specific collection.
+   // Returning the existing structure for now to keep the UI working.
+   return new Promise((resolve) => {
     setTimeout(() => {
         resolve({
             items: [
-                { src: '/pl2.jpg', alt: 'Festive Look 1' }, // Local image
-                { src: '/pl1.jpg', alt: 'Festive Look 2' }, // Local image
-                { src: '/pl1.jpg', alt: 'Festive Look 3' }, // Local image
-                { src: '/pl2.jpg', alt: 'Festive Look 4' }  // Local image
+                { src: '/pl2.jpg', alt: 'Festive Look 1' }, 
+                { src: '/pl1.jpg', alt: 'Festive Look 2' }, 
+                { src: '/pl1.jpg', alt: 'Festive Look 3' }, 
+                { src: '/pl2.jpg', alt: 'Festive Look 4' }  
             ],
-            banner: { src: '/stock1.jpg', alt: 'Traditional Coming Soon' } // Local image
+            banner: { src: '/stock1.jpg', alt: 'Traditional Coming Soon' } 
         });
     }, 500);
   });
 }
 
-/**
- * Fetch products by category (Product Type)
- * TODO: Replace this mock implementation with actual Shopify Storefront API call.
- * You might filter by collection or product type using a specific query.
- * @param {string} category
- */
-async function fetchProductsByCategory(category) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const filtered = MOCK_PRODUCTS.filter(p => p.productType.toLowerCase() === category.toLowerCase());
-      resolve(filtered.map(normalizeProduct));
-    }, 800);
-  });
-}
-
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Example: client.product.fetchByHandle(handle).then((product) => { ... });
-
-  
-/**
- * Fetch a single product by handle
- * @param {string} handle 
- */
-async function fetchProductByHandle(handle) {
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const product = MOCK_PRODUCTS.find(p => p.handle === handle);
-      resolve(product ? normalizeProduct(product) : null);
-    }, 500);
-  });
-}
-
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Example: client.product.fetchQuery({ query: query }).then((products) => { ... });
-
-  
-/**
- * Search products by query
- * @param {string} query 
- */
-async function searchProducts(query) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const lowerQuery = query.toLowerCase().trim();
-      if (!lowerQuery) { // Early exit if empty after trim
-        resolve([]);
-        return;
-      }
-      const filtered = MOCK_PRODUCTS.filter(p => 
-        p.title.toLowerCase().includes(lowerQuery) || 
-        p.productType.toLowerCase().includes(lowerQuery)
-      );
-      resolve(filtered.map(normalizeProduct));
-    }, 600);
-  });
-}
-
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Typically fetching a specific "Trending" collection.
-
-// Export functions at the end for compatibility
-export { fetchProductsByCategory, fetchProductByHandle, searchProducts };
-
-  
-/**
- * Fetch trending products
- * Returns a subset of products to be displayed in the trending section
- */
-export async function fetchTrendingProducts() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Return specific items or just the first few as "trending"
-      // In a real app, this might query a specific collection
-      resolve(MOCK_PRODUCTS.slice(0, 7).map(normalizeProduct));
-
-    }, 700);
-  });
-}
-
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Example: client.checkout.create().then((checkout) => { ... });
-
-  
+// --- Checkout Operations ---
 
 /**
  * Create a checkout
  */
 export async function createCheckout() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: 'gid://shopify/Checkout/mock-checkout-id',
-        webUrl: 'https://mock-shop.myshopify.com/checkouts/mock-checkout-id',
-        lineItems: []
-      });
-    }, 500);
-  });
+  try {
+    return await client.checkout.create();
+  } catch (error) {
+    console.error("Error creating checkout:", error);
+    throw error;
+  }
 }
-
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Example: client.checkout.addLineItems(checkoutId, lineItems).then((checkout) => { ... });
 
 /**
  * Add items to checkout
@@ -382,375 +186,466 @@ export async function createCheckout() {
  * @param {Array} lineItems 
  */
 export async function addLineItems(checkoutId, lineItems) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Return updated checkout object
-      resolve({
-        id: checkoutId,
-        webUrl: 'https://mock-shop.myshopify.com/checkouts/mock-checkout-id',
-        lineItems: lineItems // In real app, this would be the actual line items from Shopify
-      });
-    }, 500);
-  });
+  try {
+    return await client.checkout.addLineItems(checkoutId, lineItems);
+  } catch (error) {
+    console.error("Error adding items to checkout:", error);
+    throw error;
+  }
 }
 
-// Placeholder for real Shopify Client initialization
-// import Client from 'shopify-buy';
-// export const client = Client.buildClient({
-//   domain: 'your-shop-name.myshopify.com',
-//   storefrontAccessToken: 'your-storefront-access-token'
-// });
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Note: Storefront API usually requires Customer Access Token creation for login, 
-// but creation might need a different mutation or be handled via Multipass/Admin API depending on setup.
+// --- Customer Authentication & Management (Direct GraphQL) ---
+
+const storefrontApiUrl = `https://${domain}/api/2023-10/graphql.json`;
+
+async function shopifyFetch(query, variables = {}) {
+  const response = await fetch(storefrontApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+  
+  const result = await response.json();
+  if (result.errors) {
+    throw new Error(result.errors[0].message);
+  }
+  return result.data;
+}
 
 /**
  * Create a new customer (Sign Up)
- * @param {string} email 
- * @param {string} password 
- * @param {string} firstName 
  */
-export async function createCustomer(email, password, firstName) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // Simulate simple validation
-      if (email.includes('error')) {
-        reject(new Error('Email already exists.'));
-      } else {
-        // Update MOCK_CUSTOMER
-        MOCK_CUSTOMER.firstName = firstName;
-        MOCK_CUSTOMER.lastName = ''; 
-        MOCK_CUSTOMER.email = email;
-        
-        saveMockData();
-
-        resolve({
-          id: 'gid://shopify/Customer/123',
-          email: email,
-          firstName: firstName
-        });
+export async function createCustomer(email, password, firstName, lastName = '') {
+  const mutation = `
+    mutation customerCreate($input: CustomerCreateInput!) {
+      customerCreate(input: $input) {
+        customer {
+          id
+          email
+          firstName
+          lastName
+        }
+        userErrors {
+          field
+          message
+        }
       }
-  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
-  // Example: creating a Customer Access Token.
+    }
+  `;
+
+  const variables = {
+    input: {
+      email,
+      password,
+      firstName,
+      lastName
+    }
+  };
+
+  const data = await shopifyFetch(mutation, variables);
   
-    }, 1000);
-  });
+  if (data.customerCreate.userErrors.length > 0) {
+    throw new Error(data.customerCreate.userErrors[0].message);
+  }
+
+  return data.customerCreate.customer;
 }
 
 /**
  * Log in a customer and get an access token
- * @param {string} email 
- * @param {string} password 
  */
 export async function loginCustomer(email, password) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // Simulate simple validation
-      if (password === 'wrong') {
-        reject(new Error('Invalid email or password.'));
-      } else {
-        
-        // For the purpose of this mock demo:
-        // If the user logs in with an email that is DIFFERENT from the current mock data,
-        // we update the mock data to reflect this "new" user session.
-        if (MOCK_CUSTOMER.email !== email) {
-            MOCK_CUSTOMER.email = email;
-            // Optionally clear name if it's a "fresh" login for a different email, 
-            // but keeping it simple by just updating email for now or resetting to default "User"
-            if (!MOCK_CUSTOMER.firstName) MOCK_CUSTOMER.firstName = "User";
-            saveMockData();
+  const mutation = `
+    mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+      customerAccessTokenCreate(input: $input) {
+        customerAccessToken {
+          accessToken
+          expiresAt
         }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
 
-        resolve({
-          accessToken: 'mock-customer-access-token',
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(), // 1 day
-          customerUser: {
-              name: MOCK_CUSTOMER.firstName + (MOCK_CUSTOMER.lastName ? ' ' + MOCK_CUSTOMER.lastName : ''),
-              email: MOCK_CUSTOMER.email
+  const variables = {
+    input: {
+      email,
+      password
+    }
+  };
+
+  const data = await shopifyFetch(mutation, variables);
+
+  if (data.customerAccessTokenCreate.userErrors.length > 0) {
+    throw new Error(data.customerAccessTokenCreate.userErrors[0].message);
+  }
+
+  return {
+      accessToken: data.customerAccessTokenCreate.customerAccessToken.accessToken,
+      expiresAt: data.customerAccessTokenCreate.customerAccessToken.expiresAt,
+      customerUser: { // Helper to match prev API
+          email: email
+      }
+  };
+}
+
+/**
+ * Fetch Customer Profile using Access Token
+ */
+export async function fetchCustomerProfile(accessToken) {
+    // If usage is within Context that stores the token, pass it here.
+    // Or we rely on the token being passed.
+    // IMPORTANT: The caller usually manages the token (e.g. from cookie/state)
+    const storedToken = accessToken || getCookieToken(); // Helper needed if we want implicit
+    
+    if (!storedToken) return null;
+
+    const query = `
+      query customer($customerAccessToken: String!) {
+        customer(customerAccessToken: $customerAccessToken) {
+          id
+          firstName
+          lastName
+          email
+          phone
+          defaultAddress {
+            id
+            address1
+            city
+            zip
+            country
           }
-        });
+          addresses(first: 10) {
+            edges {
+              node {
+                id
+                address1
+                city
+                province
+                zip
+                country
+                firstName
+                lastName
+                phone
+              }
+            }
+          }
+          orders(first: 10) {
+            edges {
+              node {
+                id
+                orderNumber
+                processedAt
+                financialStatus
+                fulfillmentStatus
+                totalPrice {
+                  amount
+                  currencyCode
+                }
+                lineItems(first: 5) {
+                  edges {
+                    node {
+                      title
+                      variant {
+                        image {
+                          src
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
-    }, 800);
-  });
+    `;
+
+    const variables = { customerAccessToken: storedToken };
+    const data = await shopifyFetch(query, variables);
+    return data.customer;
 }
 
-// Mock Customer Data
-// Load from session storage or use default
-const storedCustomer = sessionStorage.getItem('mock_customer_data');
-const DEFAULT_MOCK_CUSTOMER = {
-  id: 'gid://shopify/Customer/1',
-  firstName: 'Alwin',
-  lastName: 'Tom',
-  email: 'alwin.tom@example.com',
-  phone: '+91 98765 43210',
-  defaultAddress: {
-      id: 'gid://shopify/MailingAddress/1',
-      address1: '123 Main St, Apartment 4B',
-      city: 'Kochi',
-      province: 'Kerala',
-      zip: '682001',
-      country: 'India',
-      phone: '+91 98765 43210'
-  }
-};
-
-const MOCK_CUSTOMER = storedCustomer ? JSON.parse(storedCustomer) : {
-  ...DEFAULT_MOCK_CUSTOMER,
-  addresses: [
-      {
-          id: 'gid://shopify/MailingAddress/1',
-          address1: '123 Main St, Apartment 4B',
-          city: 'Kochi',
-          province: 'Kerala',
-          zip: '682001',
-          country: 'India',
-          phone: '+91 98765 43210',
-          firstName: 'Alwin',
-          lastName: 'Tom'
-      },
-      {
-          id: 'gid://shopify/MailingAddress/2',
-          address1: 'Tech Park, Building 3',
-          city: 'Trivandrum',
-          province: 'Kerala',
-          zip: '695001',
-          country: 'India',
-          phone: '+91 98765 43210',
-          firstName: 'Alwin', 
-          lastName: 'Tom'
-      }
-  ],
-  orders: [
-      {
-          id: 'gid://shopify/Order/1',
-          orderNumber: '1001',
-          processedAt: '2023-10-24T10:00:00Z',
-          financialStatus: 'PAID',
-          fulfillmentStatus: 'FULFILLED',
-          totalPrice: { amount: '4599.00', currencyCode: 'INR' },
-          lineItems: [
-              { title: 'Gold Plated Necklace', originalTotalPrice: { amount: '4599.00', currencyCode: 'INR' }, variant: { image: { src: '/necklace.jpg' } } }
-          ]
-      },
-      {
-          id: 'gid://shopify/Order/2',
-          orderNumber: '1002',
-          processedAt: '2023-09-10T14:30:00Z',
-          financialStatus: 'PAID',
-          fulfillmentStatus: 'IN_PROGRESS',
-          totalPrice: { amount: '1299.00', currencyCode: 'INR' },
-          lineItems: [
-              { title: 'Silver Earrings', originalTotalPrice: { amount: '599.00', currencyCode: 'INR' }, variant: { image: { src: '/earring.jpg' } } },
-              { title: 'Bracelet', originalTotalPrice: { amount: '700.00', currencyCode: 'INR' }, variant: { image: { src: '/bracelets.jpg' } } }
-          ]
-      }
-  ],
-  paymentMethods: [
-      {
-          id: 'pm_1',
-          type: 'CreditCard',
-          brand: 'VISA',
-          last4: '4242',
-          expiryMonth: 12,
-          expiryYear: 26
-      },
-      {
-          id: 'pm_2',
-          type: 'CreditCard',
-          brand: 'MasterCard',
-          last4: '8888',
-          expiryMonth: 9,
-          expiryYear: 25
-      }
-  ],
-
-  settings: {
-     marketing: true,
-     orderUpdates: true,
-     newsletter: false
-  }
-};
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-// Fetch customer details using the access token.
-
-const saveMockData = () => {
-    sessionStorage.setItem('mock_customer_data', JSON.stringify(MOCK_CUSTOMER));
-};
-
-/**
-* Fetch Customer Profile
-*/
-export async function fetchCustomerProfile() {
-  return new Promise((resolve) => {
-  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
-  // Perform a customer update mutation.
-
-    setTimeout(() => {
-      resolve({
-         firstName: MOCK_CUSTOMER.firstName,
-         lastName: MOCK_CUSTOMER.lastName,
-         email: MOCK_CUSTOMER.email,
-         phone: MOCK_CUSTOMER.phone,
-         imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300' // Placeholder
-      });
-    }, 600);
-  });
-}
-
-export async function updateCustomerProfile(updates) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (updates.firstName) MOCK_CUSTOMER.firstName = updates.firstName;
-      if (updates.lastName) MOCK_CUSTOMER.lastName = updates.lastName;
-      if (updates.email) MOCK_CUSTOMER.email = updates.email;
-      if (updates.phone) MOCK_CUSTOMER.phone = updates.phone;
-      
-      saveMockData();
-// TODO: Replace this mock implementation with actual Shopify Storefront API call.
-   // Fetch orders for the logged-in customer.
-
-   
-      resolve({
-         firstName: MOCK_CUSTOMER.firstName,
-         lastName: MOCK_CUSTOMER.lastName,
-         email: MOCK_CUSTOMER.email,
-         phone: MOCK_CUSTOMER.phone,
-         imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300'
-      });
-    }, 600);
-  });
+// Helper for cookie token retrieval if needed inside service (optional)
+function getCookieToken() {
+    const name = 'customerAccessToken=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
 
 /**
-* Fetch Customer Orders
-*/
-export async function fetchCustomerOrders() {
-   return new Promise((resolve) => {
-    setTimeout(() => {
-      const orders = MOCK_CUSTOMER.orders.map(order => ({
-        id: order.orderNumber, // Using number as ID for display
-        date: new Date(order.processedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
-  // TODO: Replace this mock implementation with actual Shopify Storefront API call.
-  // Fetch addresses for the logged-in customer.
+ * Update Customer Profile
+ */
+export async function updateCustomerProfile(accessToken, updates) {
+    const token = accessToken || getCookieToken();
+    if (!token) throw new Error("No access token found");
 
-        status: order.fulfillmentStatus === 'FULFILLED' ? 'Delivered' : 'In Transit', // Mapping status
-        total: formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode),
-        items: order.lineItems.map(item => ({
-            name: item.title,
-            image: item.variant?.image?.src || ''
-        }))
-      }));
-      resolve(orders);
-    }, 700);
-  });
+    const mutation = `
+        mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
+            customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
+                customer {
+                    id
+                    firstName
+                    lastName
+                    email
+                    phone
+                }
+                userErrors {
+                    field
+                    message
+                }
+            }
+        }
+    `;
+    
+    const variables = {
+        customerAccessToken: token,
+        customer: updates
+    };
+    
+    const data = await shopifyFetch(mutation, variables);
+
+    
+    if (data.customerUpdate.userErrors.length > 0) {
+        throw new Error(data.customerUpdate.userErrors[0].message);
+    }
+    
+    return data.customerUpdate.customer;
 }
 
 /**
-* Fetch Customer Addresses
-*/
-export async function fetchCustomerAddresses() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const addresses = MOCK_CUSTOMER.addresses.map((addr, index) => ({
-          id: index + 1,
-          type: index === 0 ? 'Home' : 'Work', // Mocking logic for type
-          name: `${addr.firstName} ${addr.lastName}`,
-          street: addr.address1,
-          city: addr.city,
-          state: addr.province,
-          zip: addr.zip,
-          phone: addr.phone,
-          isDefault: addr.id === MOCK_CUSTOMER.defaultAddress.id
-      }));
-      resolve(addresses);
-    }, 500);
-  });
+ * Fetch Customer Orders (extracted from profile query usually, but standalone here)
+ */
+export async function fetchCustomerOrders(accessToken) {
+    const profile = await fetchCustomerProfile(accessToken);
+    if (!profile || !profile.orders) return [];
+    
+    return profile.orders.edges.map(edge => {
+        const order = edge.node;
+        return {
+            id: order.orderNumber,
+            date: new Date(order.processedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
+            status: order.fulfillmentStatus,
+            total: formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode),
+            items: order.lineItems.edges.map(item => ({
+                name: item.node.title,
+                image: item.node.variant?.image?.src || ''
+            }))
+        };
+    });
+}
+/**
+ * Fetch Customer Addresses
+ */
+export async function fetchCustomerAddresses(accessToken) {
+     const profile = await fetchCustomerProfile(accessToken);
+     if (!profile || !profile.addresses) return [];
+
+     return profile.addresses.edges.map(edge => {
+         const addr = edge.node;
+         return {
+             id: addr.id,
+             type: 'Home', // Logic can be improved
+             name: `${addr.firstName} ${addr.lastName}`,
+             street: addr.address1,
+             city: addr.city,
+             state: addr.province,
+             zip: addr.zip,
+             country: addr.country,
+             phone: addr.phone,
+             isDefault: profile.defaultAddress?.id === addr.id
+         };
+     });
 }
 
 /**
-* Fetch Customer Payment Methods
-* NOTE: Shopify Storefront API does not expose saved payment methods directly for security.
-* This is a mock to simulate stored cards if using a vaulted payment provider integration.
-*/
+ * Add Customer Address
+ */
+export async function addCustomerAddress(accessToken, address) {
+    const token = accessToken || getCookieToken();
+    // If the first arg is actually the address object (because callees didn't pass token), handle that
+    // This is a bit of a hack to support legacy calls if they existed, but better to be strict or smart.
+    // Based on previous mocks: addCustomerAddress(address). 
+    // So usage was likely: addCustomerAddress(newAddress). 
+    // So 'accessToken' might actually be 'address' if called with 1 arg.
+    
+    let actualToken = token;
+    let actualAddress = address;
+
+    if (typeof accessToken === 'object' && !address) {
+        actualAddress = accessToken;
+        actualToken = getCookieToken();
+    }
+    
+    if (!actualToken) throw new Error("No access token found");
+
+    const mutation = `
+        mutation customerAddressCreate($customerAccessToken: String!, $address: MailingAddressInput!) {
+            customerAddressCreate(customerAccessToken: $customerAccessToken, address: $address) {
+                customerAddress {
+                    id
+                    address1
+                    city
+                    province
+                    zip
+                    country
+                }
+                userErrors {
+                    field
+                    message
+                }
+            }
+        }
+    `;
+    
+    const variables = {
+        customerAccessToken: actualToken,
+        address: {
+            address1: actualAddress.street,
+            city: actualAddress.city,
+            province: actualAddress.state,
+            zip: actualAddress.zip,
+            country: 'India', // Hardcoded or dynamic
+            phone: actualAddress.phone,
+            firstName: actualAddress.name.split(' ')[0],
+            lastName: actualAddress.name.split(' ')[1] || ''
+        }
+    };
+    
+    const data = await shopifyFetch(mutation, variables);
+    
+    if (data.customerAddressCreate.userErrors.length > 0) {
+        throw new Error(data.customerAddressCreate.userErrors[0].message);
+    }
+    
+    return data.customerAddressCreate.customerAddress;
+}
+
+/**
+ * Update Customer Address
+ */
+export async function updateCustomerAddress(accessToken, addressId, address) {
+    let actualToken = accessToken || getCookieToken();
+    let actualId = addressId;
+    let actualAddress = address;
+
+    // Handle shift if called as updateCustomerAddress(id, address)
+    if (typeof accessToken === 'string' && typeof addressId === 'object') {
+         // Check if accessToken looks like an ID (usually numbers or GIDs)
+         // But wait, token is also a string.
+         // If generic usage was updateCustomerAddress(id, addr), then accessToken captures ID.
+         // We need to be careful. 
+         // Strategy: if 'address' is undefined, then args are likely (id, address)
+         if (!address) {
+             actualAddress = addressId;
+             actualId = accessToken;
+             actualToken = getCookieToken();
+         }
+    }
+
+    if (!actualToken) throw new Error("No access token found");
+
+    const mutation = `
+        mutation customerAddressUpdate($customerAccessToken: String!, $id: ID!, $address: MailingAddressInput!) {
+            customerAddressUpdate(customerAccessToken: $customerAccessToken, id: $id, address: $address) {
+                customerAddress {
+                    id
+                }
+                userErrors {
+                    field
+                    message
+                }
+            }
+        }
+    `;
+    
+     const variables = {
+        customerAccessToken: actualToken,
+        id: actualId,
+        address: {
+            address1: actualAddress.street,
+            city: actualAddress.city,
+            province: actualAddress.state,
+            zip: actualAddress.zip,
+            country: 'India',
+            phone: actualAddress.phone,
+            firstName: actualAddress.name.split(' ')[0],
+            lastName: actualAddress.name.split(' ')[1] || ''
+        }
+    };
+
+    const data = await shopifyFetch(mutation, variables);
+
+    if (data.customerAddressUpdate.userErrors.length > 0) {
+        throw new Error(data.customerAddressUpdate.userErrors[0].message);
+    }
+
+    return data.customerAddressUpdate.customerAddress;
+}
+
+
+/**
+ * Delete Customer Address
+ */
+export async function deleteCustomerAddress(accessToken, addressId) {
+    let actualToken = accessToken || getCookieToken();
+    let actualId = addressId;
+
+    // Handle shift if called as deleteCustomerAddress(id)
+    if (!addressId) {
+        actualId = accessToken;
+        actualToken = getCookieToken();
+    }
+
+    if (!actualToken) throw new Error("No access token found");
+
+    const mutation = `
+        mutation customerAddressDelete($customerAccessToken: String!, $id: ID!) {
+            customerAddressDelete(customerAccessToken: $customerAccessToken, id: $id) {
+                deletedCustomerAddressId
+                userErrors {
+                    field
+                    message
+                }
+            }
+        }
+    `;
+
+    const variables = {
+        customerAccessToken: actualToken,
+        id: actualId
+    };
+
+    const data = await shopifyFetch(mutation, variables);
+
+    if (data.customerAddressDelete.userErrors.length > 0) {
+        throw new Error(data.customerAddressDelete.userErrors[0].message);
+    }
+
+    return true;
+}
+
+// Payment methods are not directly exposed via Storefront API for security.
 export async function fetchCustomerPaymentMethods() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(MOCK_CUSTOMER.paymentMethods);
-        }, 600);
-    });
+    return []; // Return empty or handle via web checkout url
 }
 
-/**
- * Fetch Customer Settings
- * NOTE: Often stored in Customer Metafields in Shopify
- */
 export async function fetchCustomerSettings() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(MOCK_CUSTOMER.settings);
-        }, 400);
-    });
+    return {}; // Logic depends on metafields
 }
-
-/**
- * Add a new customer address
- * @param {object} address 
- */
-export async function addCustomerAddress(address) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newAddress = {
-          id: `gid://shopify/MailingAddress/${Date.now()}`,
-          address1: address.street,
-          city: address.city,
-          province: address.state,
-          zip: address.zip,
-          country: 'India',
-          phone: address.phone,
-          firstName: address.name.split(' ')[0] || 'User',
-          lastName: address.name.split(' ')[1] || 'Name'
-      };
-      
-      // In a real app we'd push to MOCK_CUSTOMER here
-      // MOCK_CUSTOMER.addresses.push(newAddress);
-
-      resolve({
-          ...address,
-          id: Date.now(), // Generate a temp ID for frontend 
-          type: address.type || 'Other'
-      });
-    }, 600);
-  });
-}
-
-/**
- * Delete a customer address
- * @param {string} addressId 
- */
-export async function deleteCustomerAddress(addressId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 500);
-  });
-}
-
-/**
- * Update a customer address
- * @param {string} addressId 
- * @param {object} updatedAddress 
- */
-
-export async function updateCustomerAddress(addressId, updatedAddress) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // In a real app, this would update the address on Shopify
-      // For mock, we'll just return the updated address
-       resolve({
-          ...updatedAddress,
-          id: addressId
-      });
-    }, 600);
-  });
-}
-

@@ -1,27 +1,17 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchCollections } from '../services/shopify';
+
+// Static category data — matches the store's fixed categories and routes
+const CATEGORIES = [
+  { handle: 'bangles', title: 'Bangles', image: '/pl1.jpg' },
+  { handle: 'bracelets', title: 'Bracelets', image: '/pl2.jpg' },
+  { handle: 'earrings', title: 'Earrings', image: '/pl1.jpg' },
+  { handle: 'necklaces', title: 'Necklaces', image: '/pl2.jpg' },
+  { handle: 'pendants', title: 'Pendants', image: '/pl1.jpg' },
+  { handle: 'rings', title: 'Rings', image: '/pl2.jpg' },
+];
 
 export default function CategoryGrid(){
     const navigate = useNavigate();
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const loadCollections = async () => {
-            try {
-                const data = await fetchCollections();
-                setCategories(data);
-            } catch (error) {
-                console.error("Failed to load collections", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadCollections();
-    }, []);
-
-    if (loading) return null; // Or a loading skeleton
 
     return(
         <>
@@ -31,9 +21,9 @@ export default function CategoryGrid(){
         <span className="text-xl md:mt-5">Shop by Category</span>
         </div>
         <div className="grid grid-cols-2 gap-8 w-[90vw] md:w-[80vw] m-auto my-10">
-            {categories.map((cat) => (
+            {CATEGORIES.map((cat) => (
                 <div key={cat.handle} className="cursor-pointer" onClick={() => navigate(`/${cat.handle}`)}>
-                    <img src={cat.image.url} alt={cat.title} className=" h-[50vw]  md:h-[30vw] w-full object-cover rounded-2xl" />
+                    <img src={cat.image} alt={cat.title} className=" h-[50vw]  md:h-[30vw] w-full object-cover rounded-2xl" />
                     <h1 className="font-Poppins text-white text-center md:text-2xl text-xs mt-5">{cat.title}</h1>
                 </div>
             ))}

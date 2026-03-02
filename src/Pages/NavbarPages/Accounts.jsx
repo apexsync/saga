@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCustomerProfile, updateCustomerProfile } from '../../services/shopify';
+// Profile is managed via Firebase Auth (through AuthContext)
 import { FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../Context/AuthContext';
 
 const Accounts = () => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user, updateUser } = useAuth();
+    const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -14,27 +14,18 @@ const Accounts = () => {
         phone: ''
     });
     const [message, setMessage] = useState('');
-    const { updateUser } = useAuth();
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                const data = await fetchCustomerProfile();
-                setUser(data);
-                setFormData({
-                    firstName: data.firstName || '',
-                    lastName: data.lastName || '',
-                    email: data.email || '',
-                    phone: data.phone || ''
-                });
-            } catch (error) {
-                console.error("Failed to fetch user profile", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadData();
-    }, []);
+        if (user) {
+            const nameParts = (user.name || '').split(' ');
+            setFormData({
+                firstName: nameParts[0] || '',
+                lastName: nameParts.slice(1).join(' ') || '',
+                email: user.email || '',
+                phone: user.phone || ''
+            });
+        }
+    }, [user]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -49,18 +40,15 @@ const Accounts = () => {
         setSaving(true);
         setMessage('');
         try {
-            const updatedUser = await updateCustomerProfile(formData);
-            setUser(updatedUser);
-            // Update global auth context so navbar reflects changes immediately
-            if (updateUser) {
-                updateUser({ 
-                    name: updatedUser.firstName + (updatedUser.lastName ? ' ' + updatedUser.lastName : ''),
-                    firstName: updatedUser.firstName,
-                    lastName: updatedUser.lastName,
-                    email: updatedUser.email,
-                    phone: updatedUser.phone
-                });
-            }
+            // Update the auth context with new data
+            const updatedData = {
+                name: formData.firstName + (formData.lastName ? ' ' + formData.lastName : ''),
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.phone
+            };
+            updateUser(updatedData);
             setMessage('Changes saved successfully!');
             setTimeout(() => setMessage(''), 3000);
         } catch (error) {
@@ -71,8 +59,8 @@ const Accounts = () => {
         }
     };
 
-    if (loading) {
-        return <div className="pt-32 text-center text-white">Loading account details...</div>;
+    if (!user) {
+        return <div className="pt-32 text-center text-white">Please sign in to view account details.</div>;
     }
 
     return (
@@ -114,9 +102,10 @@ const Accounts = () => {
                             type="email" 
                             name="email"
                             value={formData.email}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 bg-black border border-white rounded-md text-white focus:border-primary outline-none transition-colors"
+                            disabled
+                            className="w-full px-4 py-2 bg-black border border-white/40 rounded-md text-white/60 cursor-not-allowed"
                         />
+                        <p className="text-xs text-white/40 mt-1">Email cannot be changed</p>
                     </div>
 
                     <div>

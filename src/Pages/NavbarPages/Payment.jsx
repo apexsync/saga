@@ -1,27 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { fetchCustomerPaymentMethods } from '../../services/shopify';
+import React, { useState } from 'react';
+// Payment methods — placeholder, can be implemented later
 
 const Payment = () => {
-    const [paymentMethods, setPaymentMethods] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const loadPayments = async () => {
-            try {
-                const methods = await fetchCustomerPaymentMethods();
-                setPaymentMethods(methods);
-            } catch (error) {
-                console.error("Failed to fetch payment methods", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadPayments();
-    }, []);
-
-    if (loading) {
-        return <div className="pt-32 text-center text-white">Loading payment methods...</div>;
-    }
+    const [paymentMethods] = useState([]);
 
     return (
         <div className="pt-24 min-h-screen text-white container mx-auto px-4 md:px-10 mb-10">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProductPageLayout from '../Components/ProductPageLayout';
-import { fetchProductsByCategory } from '../services/shopify';
+import { fetchProductsByCategory } from '../services/products';
 
 const Bangles = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +9,7 @@ const Bangles = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const data = await fetchProductsByCategory('Bangle');
+        const data = await fetchProductsByCategory('Bangles');
         setProducts(data);
       } catch (error) {
         console.error("Error fetching bangles:", error);

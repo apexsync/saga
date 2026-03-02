@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchFestiveEdit } from '../services/shopify';
+import { fetchFestiveEdit } from '../services/products';
 
 export default function ImageLayout(){
     const [content, setContent] = useState(null);

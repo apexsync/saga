@@ -18,6 +18,7 @@ import Accounts from './Pages/NavbarPages/Accounts'
 import Help from './Pages/NavbarPages/Help'
 import MyOrders from './Pages/NavbarPages/MyOrders'
 import Settings from './Pages/NavbarPages/Settings'
+import OrderSuccess from './Pages/OrderSuccess'
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
       <Route path="/help" element={<Help />} />
       <Route path="/my-orders" element={<MyOrders />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/order-success" element={<OrderSuccess />} />
     </Routes>
     <Footer />
     </div>
