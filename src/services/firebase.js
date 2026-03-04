@@ -7,6 +7,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getAnalytics, isSupported } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -18,15 +19,11 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Validation
-if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  console.warn("Firebase credentials missing! Please check your .env file.");
-}
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 // Initialize services
+export const analytics = await isSupported() ? getAnalytics(app) : null;
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 

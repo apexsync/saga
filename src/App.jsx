@@ -18,6 +18,8 @@ import Accounts from './Pages/NavbarPages/Accounts'
 import Help from './Pages/NavbarPages/Help'
 import MyOrders from './Pages/NavbarPages/MyOrders'
 import Settings from './Pages/NavbarPages/Settings'
+import ProductOverview from './Pages/ProductOverview'
+import ProductDetail from './Pages/ProductDetail'
 import OrderSuccess from './Pages/OrderSuccess'
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
     <Navbar />
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/products" element={<ProductOverview />} />
+      <Route path="/product/:productId" element={<ProductDetail />} />
       <Route path="/bangles" element={<Bangles />} />
       <Route path="/bracelets" element={<Bracelets />} />
       <Route path="/earrings" element={<Earrings />} />

@@ -41,6 +41,14 @@ const normalizeProduct = (docSnapshot) => {
     category: data.category || '',
     description: data.description || '',
     image: data.imageUrl || '',
+    media: data.media || [],
+    material: data.material || '',
+    purity: data.purity || '',
+    weight: data.weight || '',
+    sizes: data.sizes || '',
+    stock: data.stock || 0,
+    metalColor: data.metalColor || '',
+    gemstones: data.gemstones || '',
     createdAt: data.createdAt?.toDate() || new Date(),
   };
 };

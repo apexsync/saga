@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
 import CircularHorizontalScroll from './CircularHorizontalScroll';
 
@@ -8,6 +8,7 @@ const ProductPageLayout = ({ title, products }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const [showBlur, setShowBlur] = useState(false);
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let timeoutId;
@@ -41,41 +42,44 @@ const ProductPageLayout = ({ title, products }) => {
   return (
     <div className="pt-28 pb-10 px-4 min-h-screen bg-black">
           <CircularHorizontalScroll />
-      <div className="w-[90vw] m-auto text-zinc-400 text-sm font-medium p-4">
+      <div className="w-[90vw] m-auto text-zinc-300 text-sm font-medium p-4 drop-shadow-sm">
         <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-        <span className="mx-2">•</span>
+        <span className="mx-2 text-zinc-500">•</span>
         <span className="text-white">{title}</span>
       </div>
-      <h1 className="text-white text-center font-Great_Vibes text-6xl mb-12 mt-10 md:mt-0 tracking-wider">{title}</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      <h1 className="text-white text-center font-Great_Vibes text-7xl md:text-8xl mb-16 mt-10 md:mt-6 tracking-wider drop-shadow-lg">{title}</h1>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
         {products.map((item) => (
           <div 
             key={item.id} 
             onMouseEnter={() => setHoveredId(item.id)}
             onMouseLeave={() => setHoveredId(null)}
-            className={`bg-zinc-900 rounded-xl overflow-hidden shadow-lg transition-all duration-500 cursor-pointer border border-zinc-800 group flex flex-col h-[18rem] md:h-auto
-            hover:scale-105 hover:z-10 hover:shadow-primary/50 hover:border-primary
+            onClick={() => navigate(`/product/${item.id}`)}
+            className={`bg-black/30 backdrop-blur-xl rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-700 cursor-pointer border border-white/10 group flex flex-col h-[22rem] md:h-auto
+            hover:scale-[1.03] hover:z-10 hover:shadow-primary/20 hover:border-primary/50
             ${showBlur && hoveredId !== item.id ? 'md:blur-sm' : ''}
             `}
           >
-            <div className="h-1/2 md:h-64 overflow-hidden relative">
+            <div className="h-48 md:h-72 overflow-hidden relative">
               <img 
                 src={item.image} 
                 alt={item.name} 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
               />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             </div>
-            <div className="p-3 md:p-5 flex flex-col justify-center h-1/2 md:h-auto gap-2 md:gap-3">
-              <h3 className="text-white text-lg md:text-xl font-Poppins tracking-wide text-center group-hover:text-primary transition-colors line-clamp-1">{item.name}</h3>
-              <p className="text-zinc-400 text-center font-semibold text-sm md:text-base group-hover:text-white">{item.price}</p>
+            <div className="p-5 md:p-8 flex flex-col justify-between flex-grow gap-4 bg-gradient-to-b from-transparent to-black/20">
+              <div className="space-y-2">
+                <h3 className="text-white text-xl md:text-2xl font-Poppins font-medium tracking-tight text-center group-hover:text-primary transition-colors line-clamp-1">{item.name}</h3>
+                <p className="text-primary text-center font-bold text-lg md:text-xl drop-shadow-sm">{item.price}</p>
+              </div>
               <button 
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent card click if there's one
+                  e.stopPropagation();
                   addToCart(item);
                   e.target.textContent = "Added!";
                 }}
-                className="w-full bg-zinc-800 text-white py-1.5 md:py-2 rounded-lg hover:bg-primary hover:text-black transition-colors duration-300 font-medium mt-1 md:mt-2 text-sm md:text-base active:scale-95 transform"
+                className="w-full bg-white/5 text-white py-3 md:py-4 rounded-xl hover:bg-primary hover:text-black transition-all duration-500 font-bold text-sm md:text-base border border-white/10 hover:border-primary active:scale-95 shadow-lg"
               >
                 Add to Cart
               </button>

@@ -19,6 +19,7 @@ function Footer() {
                     <h3 className="text-lg font-semibold tracking-wide mr-2 text-primary">Explore</h3>
                     <nav className="grid grid-cols-2 gap-2 text-gray-400">
                         <Link to="/" className="hover:text-white transition-colors duration-300">Home</Link>
+                        <Link to="/products" className="hover:text-white transition-colors duration-300 font-semibold text-primary">Full Collection</Link>
                         <Link to="/necklace" className="hover:text-white transition-colors duration-300">Necklace</Link>
                         <Link to="/bangles" className="hover:text-white transition-colors duration-300">Bangles</Link>
                         <Link to="/earrings" className="hover:text-white transition-colors duration-300">Earrings</Link>

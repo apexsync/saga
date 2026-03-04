@@ -98,9 +98,29 @@ const MyOrders = () => {
                                     </div>
                                 ))}
                                 
-                                <div className="mt-4 pt-4 border-t border-white/10 text-xs text-white/40">
-                                    <p>Delivering to: {order.address.street}, {order.address.city}, {order.address.zip}</p>
-                                    <p>Payment ID: {order.paymentId}</p>
+                                <div className="mt-4 pt-4 border-t border-white/10 text-xs text-white/40 flex flex-col md:flex-row justify-between gap-4">
+                                    <div>
+                                        <p className="mb-1 text-white/50 uppercase tracking-tighter">Delivering to:</p>
+                                        <p className="text-white/80">{order.address.street}, {order.address.city}, {order.address.zip}</p>
+                                        <p className="mt-2 mb-1 text-white/50 uppercase tracking-tighter">Payment ID:</p>
+                                        <p className="text-white/80 font-mono">{order.paymentId}</p>
+                                    </div>
+                                    
+                                    {order.trackingId && (
+                                        <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 self-start md:min-w-[240px]">
+                                            <p className="text-primary font-bold text-[10px] tracking-widest uppercase mb-2">Tracking Details</p>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    <span className="text-zinc-500 block">Courier</span>
+                                                    <span className="text-white font-medium">{order.courier || 'Standard Shipping'}</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-zinc-500 block">Tracking Number</span>
+                                                    <span className="text-white font-mono font-medium">{order.trackingId}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { fetchTrendingProducts } from '../services/products';
 
 export default function HorizontalCarousal(){
     const [items, setItems] = useState([]);
+    const navigate = useNavigate();
     const scrollRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -103,14 +105,18 @@ export default function HorizontalCarousal(){
                     onMouseMove={handleMouseMove}
                 >
                     {loopedItems.map((item, index) => (
-                        <div key={`${item.id}-${index}`} className="relative shrink-0">
+                        <Link 
+                            to={`/product/${item.id}`} 
+                            key={`${item.id}-${index}`} 
+                            className="relative shrink-0 block"
+                        >
                              <img 
                                 src={item.image} 
                                 alt={item.name} 
                                 draggable="false"
                                 className="md:h-[40vh] h-[30vh] lg:h-[60vh] md:w-[42vw] w-[60vw] lg:w-[28vw] object-cover rounded-2xl hover:scale-105 transform transition-transform duration-300 select-none" 
                             />
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

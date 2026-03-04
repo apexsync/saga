@@ -122,6 +122,14 @@ function Navbar(){
                     )}
                </div>
                <ul className="flex justify-center items-center flex-col text-center md:text-xl text-white/80">
+                    <Link to="/products" className="w-full" onClick={() => setIsOpen(false)}>
+                        <li className="cursor-pointer p-4 border-t border-b border-t-primary border-b-primary w-full hover:text-primary flex items-center justify-start pl-10 gap-4 group">
+                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#FB7010" className="w-7 h-7 group-hover:scale-110 transition-transform">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H21m-11.14 0l-1.591 1.591M21 21v-7.5M21 21H3.75m0 0V7.5m0 0v-7.5a.75.75 0 0 1 .75-.75h14.25a.75.75 0 0 1 .75.75v7.5m-15.75 0H21m-15.75 0h14.25" />
+                            </svg>
+                            Shop All Collection
+                        </li>
+                    </Link>
 
                     {isAuthenticated && (
                         <>
