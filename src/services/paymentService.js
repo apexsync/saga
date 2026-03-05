@@ -4,7 +4,7 @@
  * Logic to communicate with the Flask backend and the Razorpay SDK.
  */
 
-const BACKEND_URL = 'http://localhost:5000'; // Update this for production
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Use env var for production
 
 /**
  * Initialize a Razorpay Payment
