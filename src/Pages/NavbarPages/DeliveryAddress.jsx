@@ -121,159 +121,186 @@ const DeliveryAddress = () => {
     }
 
     return (
-        <div className="pt-24 min-h-screen text-white container mx-auto px-4 md:px-10 mb-10 relative">
-             <div className="flex justify-between items-end border-b border-white/20 pb-2 mb-8">
-                <h1 className="text-3xl font-bold text-primary border-b-2 border-primary -mb-2.5 pb-2 inline-block">Delivery Addresses</h1>
-                <button 
-                    onClick={handleOpenAddModal}
-                    className="bg-primary text-white border border-primary px-4 py-2 rounded text-sm font-semibold hover:bg-black hover:text-primary transition-colors"
-                >
-                    + Add New Address
-                </button>
-            </div>
-
-            {addresses.length === 0 ? (
-                <div className="text-center text-white/60 py-10">No saved addresses found.</div>
-            ) : (
-                <div className="grid md:grid-cols-2 gap-6">
-                    {addresses.map((addr) => (
-                        <div key={addr.id} className="bg-black p-6 rounded-lg border border-white relative group">
-                            <div className="flex justify-between items-start mb-4">
-                                <span className="bg-white/10 border border-white/20 text-white text-xs px-2 py-1 rounded uppercase font-bold tracking-wide">{addr.type}</span>
-                            </div>
-                            <h3 className="font-bold text-lg mb-1 text-primary">{addr.name}</h3>
-                            <p className="text-white/80 mb-1">{addr.street}</p>
-                            <p className="text-white/80 mb-1">{addr.city}, {addr.state} - {addr.zip}</p>
-                            <p className="text-white font-medium mt-2">Ph: {addr.phone}</p>
-                            
-                            <div className="flex gap-3 mt-6 border-t border-white/20 pt-4">
-                                <button 
-                                    onClick={() => handleOpenEditModal(addr)}
-                                    className="flex-1 bg-white text-black py-1.5 rounded font-bold text-sm hover:bg-gray-200 transition-colors"
-                                >
-                                    Edit
-                                </button>
-                                <button 
-                                    onClick={() => handleDeleteAddress(addr.id)}
-                                    className="flex-1 border border-primary text-primary py-1.5 rounded font-bold text-sm hover:bg-primary hover:text-white transition-colors"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+        <div className="pt-32 min-h-screen text-white px-4 md:px-10 pb-20">
+            <div className="max-w-5xl mx-auto">
+                <div className="flex flex-col md:flex-row justify-between items-center border-b border-white/50 pb-6 mb-12">
+                    <h1 className="text-4xl font-Great_Vibes mb-4 md:mb-0">My Addresses</h1>
+                    <button 
+                        onClick={handleOpenAddModal}
+                        className="bg-white text-black border border-white px-6 py-2.5 text-sm uppercase tracking-widest font-medium hover:bg-black hover:text-white transition-colors duration-300"
+                    >
+                        + Add New Address
+                    </button>
                 </div>
-            )}
 
-            {/* Modal remains the same */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                    <div className="bg-black border border-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold text-primary">{isEditMode ? 'Edit Address' : 'Add New Address'}</h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-white hover:text-primary">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                        
-                        <form onSubmit={handleSaveAddress} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-white/80 mb-1">Address Type</label>
-                                <select 
-                                    name="type" 
-                                    value={newAddress.type} 
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white appearance-none"
-                                >
-                                    <option value="Home" className="bg-black">Home</option>
-                                    <option value="Work" className="bg-black">Work</option>
-                                    <option value="Other" className="bg-black">Other</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label className="block text-sm font-medium text-white/80 mb-1">Full Name</label>
-                                <input 
-                                    type="text" 
-                                    name="name" 
-                                    value={newAddress.name} 
-                                    onChange={handleInputChange} 
-                                    required 
-                                    className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-white/80 mb-1">Street Address</label>
-                                <input 
-                                    type="text" 
-                                    name="street" 
-                                    value={newAddress.street} 
-                                    onChange={handleInputChange} 
-                                    required 
-                                    className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white"
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-white/80 mb-1">City</label>
-                                    <input 
-                                        type="text" 
-                                        name="city" 
-                                        value={newAddress.city} 
-                                        onChange={handleInputChange} 
-                                        required 
-                                        className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-white/80 mb-1">State</label>
-                                    <input 
-                                        type="text" 
-                                        name="state" 
-                                        value={newAddress.state} 
-                                        onChange={handleInputChange} 
-                                        required 
-                                        className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-white/80 mb-1">ZIP Code</label>
-                                    <input 
-                                        type="text" 
-                                        name="zip" 
-                                        value={newAddress.zip} 
-                                        onChange={handleInputChange} 
-                                        required 
-                                        className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-white/80 mb-1">Phone Number</label>
-                                    <input 
-                                        type="tel" 
-                                        name="phone" 
-                                        value={newAddress.phone} 
-                                        onChange={handleInputChange} 
-                                        required 
-                                        className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded focus:border-primary outline-none text-white"
-                                    />
-                                </div>
-                            </div>
-
-                            <button type="submit" className="w-full bg-primary text-white font-bold py-3 rounded mt-4 hover:bg-white hover:text-black transition-colors">
-                                {isEditMode ? 'Update Address' : 'Save Address'}
-                            </button>
-                        </form>
+                {addresses.length === 0 ? (
+                    <div className="text-center py-20 bg-zinc-900/20 border border-zinc-800 rounded-sm">
+                        <p className="text-zinc-400 mb-6 text-lg">You don't have any saved delivery addresses.</p>
+                        <button 
+                            onClick={handleOpenAddModal}
+                            className="text-white border-b border-white pb-1 hover:text-zinc-300 transition-colors uppercase tracking-widest text-sm"
+                        >
+                            Create One Now
+                        </button>
                     </div>
-                </div>
-            )}
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {addresses.map((addr) => (
+                            <div key={addr.id} className="bg-black p-8 rounded-sm border border-zinc-800 hover:border-zinc-600 transition-colors flex flex-col h-full">
+                                <div className="mb-6 flex-grow">
+                                    <div className="mb-4 inline-block px-3 py-1 bg-zinc-800 text-xs font-medium tracking-widest uppercase text-zinc-300">
+                                        {addr.type}
+                                    </div>
+                                    <h3 className="font-semibold text-xl mb-2 text-white">{addr.name}</h3>
+                                    <div className="text-zinc-400 space-y-1 text-sm leading-relaxed">
+                                        <p>{addr.street}</p>
+                                        <p>{addr.city}{addr.state ? `, ${addr.state}` : ''} {addr.zip}</p>
+                                        <p className="pt-2 text-white">Ph: {addr.phone}</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 gap-3 mt-auto pt-6 border-t border-zinc-800">
+                                    <button 
+                                        onClick={() => handleOpenEditModal(addr)}
+                                        className="py-2 text-sm text-white border border-zinc-700 hover:border-white hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-wider"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDeleteAddress(addr.id)}
+                                        className="py-2 text-sm text-zinc-400 border border-transparent hover:border-red-900 hover:text-red-400 hover:bg-red-950/20 transition-all duration-300 uppercase tracking-wider"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Modal */}
+                {isModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+                        <div className="bg-black border border-zinc-800 rounded-sm w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                            <div className="sticky top-0 bg-black/95 backdrop-blur-xl border-b border-zinc-800 p-6 flex justify-between items-center z-10">
+                                <h2 className="text-3xl font-Great_Vibes">{isEditMode ? 'Edit Address' : 'New Address'}</h2>
+                                <button 
+                                    onClick={() => setIsModalOpen(false)} 
+                                    className="text-zinc-500 hover:text-white transition-colors"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <div className="p-6">
+                                <form onSubmit={handleSaveAddress} className="space-y-5">
+                                    <div>
+                                        <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">Address Type</label>
+                                        <div className="relative">
+                                            <select 
+                                                name="type" 
+                                                value={newAddress.type} 
+                                                onChange={handleInputChange}
+                                                className="w-full p-3 bg-zinc-900 border border-zinc-800 text-white focus:border-white outline-none appearance-none transition-colors"
+                                            >
+                                                <option value="Home">Home</option>
+                                                <option value="Work">Work</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
+                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">Full Name</label>
+                                        <input 
+                                            type="text" 
+                                            name="name" 
+                                            value={newAddress.name} 
+                                            onChange={handleInputChange} 
+                                            required 
+                                            className="w-full p-3 bg-black border border-zinc-800 text-white focus:border-white outline-none transition-colors"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">Street Address</label>
+                                        <input 
+                                            type="text" 
+                                            name="street" 
+                                            value={newAddress.street} 
+                                            onChange={handleInputChange} 
+                                            required 
+                                            className="w-full p-3 bg-black border border-zinc-800 text-white focus:border-white outline-none transition-colors"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-5">
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">City</label>
+                                            <input 
+                                                type="text" 
+                                                name="city" 
+                                                value={newAddress.city} 
+                                                onChange={handleInputChange} 
+                                                required 
+                                                className="w-full p-3 bg-black border border-zinc-800 text-white focus:border-white outline-none transition-colors"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">State</label>
+                                            <input 
+                                                type="text" 
+                                                name="state" 
+                                                value={newAddress.state} 
+                                                onChange={handleInputChange} 
+                                                required 
+                                                className="w-full p-3 bg-black border border-zinc-800 text-white focus:border-white outline-none transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-5">
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">ZIP Code</label>
+                                            <input 
+                                                type="text" 
+                                                name="zip" 
+                                                value={newAddress.zip} 
+                                                onChange={handleInputChange} 
+                                                required 
+                                                className="w-full p-3 bg-black border border-zinc-800 text-white focus:border-white outline-none transition-colors"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-widest text-zinc-400 mb-2">Phone</label>
+                                            <input 
+                                                type="text" 
+                                                name="phone" 
+                                                value={newAddress.phone} 
+                                                onChange={handleInputChange} 
+                                                required 
+                                                className="w-full p-3 bg-black border border-zinc-800 text-white focus:border-white outline-none transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        type="submit" 
+                                        className="w-full bg-white text-black font-semibold py-4 uppercase tracking-widest text-sm hover:bg-zinc-200 transition-colors duration-300 mt-6"
+                                    >
+                                        {isEditMode ? 'Update Address' : 'Save Address'}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

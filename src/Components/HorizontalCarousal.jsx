@@ -7,6 +7,8 @@ export default function HorizontalCarousal(){
     const navigate = useNavigate();
     const scrollRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
+    const isDraggingRef = useRef(false);
+    const hasDraggedRef = useRef(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
     
@@ -28,37 +30,41 @@ export default function HorizontalCarousal(){
 
     const handleMouseDown = (e) => {
         setIsDragging(true);
+        isDraggingRef.current = true;
+        hasDraggedRef.current = false;
         setStartX(e.pageX - scrollRef.current.offsetLeft);
         setScrollLeft(scrollRef.current.scrollLeft);
         lastX.current = e.pageX;
         velX.current = 0;
         
-        // Stop any existing momentum
-        cancelAnimationFrame(animationRef.current);
-        
         scrollRef.current.style.cursor = 'grabbing';
     };
 
     const handleMouseLeave = () => {
-        if (isDragging) {
+        if (isDraggingRef.current) {
             setIsDragging(false);
+            isDraggingRef.current = false;
             if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
-            beginMomentum();
         }
     };
 
     const handleMouseUp = () => {
         setIsDragging(false);
+        isDraggingRef.current = false;
         if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
-        beginMomentum();
     };
 
     const handleMouseMove = (e) => {
-        if (!isDragging) return;
+        if (!isDraggingRef.current) return;
         e.preventDefault();
         
         const x = e.pageX - scrollRef.current.offsetLeft;
         const walk = (x - startX) * 1.5; // Drag speed multiplier
+        
+        if (Math.abs(x - startX) > 5) {
+            hasDraggedRef.current = true;
+        }
+
         scrollRef.current.scrollLeft = scrollLeft - walk;
 
         // Calculate velocity for momentum
@@ -67,27 +73,41 @@ export default function HorizontalCarousal(){
         velX.current = newVel;
     };
 
-    const beginMomentum = () => {
-        cancelAnimationFrame(animationRef.current);
-        
-        const loop = () => {
-            // Apply friction needed to slow down
-            velX.current *= 0.95; 
-            
-            if (Math.abs(velX.current) > 0.5) {
-                if (scrollRef.current) {
-                    scrollRef.current.scrollLeft -= velX.current * 1.5;
-                }
-                animationRef.current = requestAnimationFrame(loop);
-            }
-        };
-        loop();
-    };
-
-    // Cleanup on unmount
+    // Auto-scroll and physics loop
     useEffect(() => {
+        const loop = () => {
+            if (scrollRef.current && items.length > 0) {
+                if (!isDraggingRef.current) {
+                    // Apply friction to manual drag velocity
+                    velX.current *= 0.95; 
+                    
+                    if (Math.abs(velX.current) > 0.5) {
+                        scrollRef.current.scrollLeft -= velX.current * 1.5;
+                    } else {
+                        // Continuous auto-scroll speed
+                        scrollRef.current.scrollLeft += 1; 
+                    }
+
+                    // Seamless loop bounds
+                    const singleSetWidth = scrollRef.current.scrollWidth / 4;
+                    
+                    if (scrollRef.current.scrollLeft >= singleSetWidth * 2) {
+                        // Jump back when scrolled far right
+                        scrollRef.current.scrollLeft -= singleSetWidth;
+                    } else if (scrollRef.current.scrollLeft <= 0) {
+                        // Jump forward if scrolled too far left
+                        scrollRef.current.scrollLeft += singleSetWidth;
+                    }
+                }
+            }
+            animationRef.current = requestAnimationFrame(loop);
+        };
+        
+        // Start loop when items are loaded
+        animationRef.current = requestAnimationFrame(loop);
+        
         return () => cancelAnimationFrame(animationRef.current);
-    }, []);
+    }, [items]);
 
     return(
         <>
@@ -108,7 +128,14 @@ export default function HorizontalCarousal(){
                         <Link 
                             to={`/product/${item.id}`} 
                             key={`${item.id}-${index}`} 
-                            className="relative shrink-0 block"
+                            className="relative shrink-0 block select-none"
+                            draggable="false"
+                            onDragStart={(e) => e.preventDefault()}
+                            onClick={(e) => {
+                                if (hasDraggedRef.current) {
+                                    e.preventDefault();
+                                }
+                            }}
                         >
                              <img 
                                 src={item.image} 

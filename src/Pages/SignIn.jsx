@@ -39,8 +39,8 @@ const SignIn = () => {
 
   return (
     <div className="flex items-center text-white justify-center min-h-[calc(100vh-80px)] mt-8  px-4">
-      <div className="w-full max-w-md p-8 space-y-6 rounded-xl shadow-lg border border-gray-100">
-        <div className="text-center">
+      <div className="w-full max-w-md p-8 space-y-6 rounded-xl  shadow-lg border border-gray-100 bg-black/60">
+        <div className="text-cente">
           <h2 className="text-3xl font-bold text-primary font-[Poppins]">Welcome Back</h2>
           <p className="mt-2 text-sm text-gray-500 font-[Poppins]">Please sign in to your account</p>
         </div>

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../Context/CartContext';
 import { useAuth } from '../Context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { initiatePayment } from '../services/paymentService';
 import { saveOrder } from '../services/orderService';
+import { fetchUserAddresses, saveAddress } from '../services/addressService';
 
 export default function Cart() {
     const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
@@ -17,11 +18,89 @@ export default function Cart() {
         zip: '',
         phone: ''
     });
+
+    const [savedAddresses, setSavedAddresses] = useState([]);
+    const [showNewAddressForm, setShowNewAddressForm] = useState(false);
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [isSavingAddress, setIsSavingAddress] = useState(false);
+
     const total = getCartTotal();
+
+    useEffect(() => {
+        const loadDefaultAddress = async () => {
+            if (user?.id) {
+                try {
+                    const addresses = await fetchUserAddresses(user.id);
+                    if (addresses && addresses.length > 0) {
+                        setSavedAddresses(addresses);
+                        handleSelectSavedAddress(addresses[0]);
+                    } else {
+                        setShowNewAddressForm(true);
+                    }
+                } catch (err) {
+                    console.error("Failed to load default address:", err);
+                }
+            } else {
+                setShowNewAddressForm(true);
+            }
+        };
+
+        loadDefaultAddress();
+    }, [user]);
+
+    const handleSelectSavedAddress = (addr) => {
+        setSelectedAddressId(addr.id);
+        setAddress({
+            street: addr.street || '',
+            city: addr.city || '',
+            zip: addr.zip || '',
+            phone: addr.phone || ''
+        });
+        setShowNewAddressForm(false);
+    };
+
+    const handleToggleNewAddress = () => {
+        setShowNewAddressForm(true);
+        setSelectedAddressId(null);
+        setAddress({ street: '', city: '', zip: '', phone: '' });
+    };
 
     const handleAddressChange = (e) => {
         const { name, value } = e.target;
         setAddress(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSaveNewAddress = async () => {
+        if (!user) {
+            setError('Please sign in to save an address.');
+            return;
+        }
+        if (!address.street || !address.city || !address.zip || !address.phone) {
+            setError('Please fill in all address fields to save.');
+            return;
+        }
+        
+        setIsSavingAddress(true);
+        setError(null);
+        try {
+            const saved = await saveAddress(user.id, {
+                type: 'Home',
+                name: user.name || 'Saved Address',
+                street: address.street,
+                city: address.city,
+                state: '',
+                zip: address.zip,
+                phone: address.phone
+            });
+            const updatedAddresses = [...savedAddresses, saved];
+            setSavedAddresses(updatedAddresses);
+            handleSelectSavedAddress(saved);
+        } catch (err) {
+            console.error("Failed to save address:", err);
+            setError("Failed to save the address. Please try again.");
+        } finally {
+            setIsSavingAddress(false);
+        }
     };
 
     const handleCheckout = async () => {
@@ -146,52 +225,121 @@ export default function Cart() {
                         {/* Delivery Details */}
                         <div className="bg-zinc-900/20 p-8 rounded-sm border border-zinc-800">
                             <h2 className="text-2xl font-Great_Vibes mb-6">Delivery Details</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400 uppercase tracking-widest">Street Address</label>
-                                    <input 
-                                        type="text" 
-                                        name="street"
-                                        value={address.street}
-                                        onChange={handleAddressChange}
-                                        placeholder="e.g. 123 Luxury Lane" 
-                                        className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors"
-                                    />
+
+                            {savedAddresses.length > 0 && (
+                                <div className="mb-6 space-y-4">
+                                    <p className="text-sm text-zinc-400">Select a saved address:</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {savedAddresses.map((addr) => (
+                                            <div 
+                                                key={addr.id} 
+                                                onClick={() => handleSelectSavedAddress(addr)}
+                                                className={`p-4 border rounded cursor-pointer transition-all ${
+                                                    selectedAddressId === addr.id 
+                                                        ? 'border-white bg-zinc-800/50' 
+                                                        : 'border-zinc-800 hover:border-zinc-600'
+                                                }`}
+                                            >
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="text-xs px-2 py-1 bg-zinc-800 rounded uppercase font-bold tracking-wide text-zinc-300">
+                                                        {addr.type || 'Home'}
+                                                    </span>
+                                                    {selectedAddressId === addr.id && (
+                                                        <span className="text-xs text-green-400 flex items-center gap-1">
+                                                            <span>✓</span> Selected
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="font-bold text-sm mb-1 text-white">{addr.name}</p>
+                                                <p className="text-sm text-zinc-400">{addr.street}</p>
+                                                <p className="text-sm text-zinc-400">{addr.city}, {addr.state} {addr.zip}</p>
+                                                <p className="text-sm text-zinc-400 mt-2">Ph: {addr.phone}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    
+                                    {!showNewAddressForm && (
+                                        <button 
+                                            onClick={handleToggleNewAddress}
+                                            className="mt-4 text-sm text-zinc-400 hover:text-white underline underline-offset-4"
+                                        >
+                                            + Deliver to a different address
+                                        </button>
+                                    )}
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400 uppercase tracking-widest">City</label>
-                                    <input 
-                                        type="text" 
-                                        name="city"
-                                        value={address.city}
-                                        onChange={handleAddressChange}
-                                        placeholder="e.g. Mumbai" 
-                                        className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors"
-                                    />
+                            )}
+
+                            {showNewAddressForm && (
+                                <div className={`${savedAddresses.length > 0 ? "mt-4 pt-6 border-t border-zinc-800" : ""}`}>
+                                    <div className="flex justify-between items-end mb-6">
+                                        <h3 className="text-lg font-medium text-white">Add New Address</h3>
+                                        {savedAddresses.length > 0 && (
+                                            <button 
+                                                onClick={() => handleSelectSavedAddress(savedAddresses[0])}
+                                                className="text-xs text-zinc-400 hover:text-white underline underline-offset-4"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-zinc-400 uppercase tracking-widest">Street Address</label>
+                                            <input 
+                                                type="text" 
+                                                name="street"
+                                                value={address.street}
+                                                onChange={handleAddressChange}
+                                                placeholder="e.g. 123 Luxury Lane" 
+                                                className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors text-white"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-zinc-400 uppercase tracking-widest">City</label>
+                                            <input 
+                                                type="text" 
+                                                name="city"
+                                                value={address.city}
+                                                onChange={handleAddressChange}
+                                                placeholder="e.g. Mumbai" 
+                                                className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors text-white"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-zinc-400 uppercase tracking-widest">ZIP Code</label>
+                                            <input 
+                                                type="text" 
+                                                name="zip"
+                                                value={address.zip}
+                                                onChange={handleAddressChange}
+                                                placeholder="e.g. 400001" 
+                                                className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors text-white"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-zinc-400 uppercase tracking-widest">Phone Number</label>
+                                            <input 
+                                                type="tel" 
+                                                name="phone"
+                                                value={address.phone}
+                                                onChange={handleAddressChange}
+                                                placeholder="e.g. 9876543210" 
+                                                className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors text-white"
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 pt-2 flex justify-end">
+                                            <button
+                                                type="button"
+                                                onClick={handleSaveNewAddress}
+                                                disabled={isSavingAddress || !address.street || !address.city || !address.zip || !address.phone}
+                                                className="bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                {isSavingAddress ? 'Saving...' : 'Save & Select Address'}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400 uppercase tracking-widest">ZIP Code</label>
-                                    <input 
-                                        type="text" 
-                                        name="zip"
-                                        value={address.zip}
-                                        onChange={handleAddressChange}
-                                        placeholder="e.g. 400001" 
-                                        className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400 uppercase tracking-widest">Phone Number</label>
-                                    <input 
-                                        type="tel" 
-                                        name="phone"
-                                        value={address.phone}
-                                        onChange={handleAddressChange}
-                                        placeholder="e.g. 9876543210" 
-                                        className="w-full bg-black border border-zinc-800 p-3 text-sm focus:border-white outline-none transition-colors"
-                                    />
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
 
