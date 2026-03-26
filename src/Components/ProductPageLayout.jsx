@@ -40,7 +40,11 @@ const ProductPageLayout = ({ title, products }) => {
   }, [hoveredId, isScrolling]);
 
   return (
-    <div className="pt-28 pb-10 px-4 min-h-screen bg-black">
+    <div className="pt-28 pb-10 px-4 min-h-screen "    
+    style={{
+    minHeight: "100vh",
+    background: "linear-gradient(to bottom, black 40%, #7D4E2E 100%)"
+  }}>
           <CircularHorizontalScroll />
       <div className="w-[90vw] m-auto text-zinc-300 text-sm font-medium p-4 drop-shadow-sm">
         <Link to="/" className="hover:text-primary transition-colors">Home</Link>

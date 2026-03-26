@@ -168,7 +168,7 @@ const ProductDetail = () => {
               <span className="text-primary font-bold tracking-[0.3em] uppercase text-xs mb-4 block drop-shadow-md">
                 {product.category} COLLECTION
               </span>
-              <h1 className="text-white text-4xl md:text-5xl font-Poppins font-medium leading-tight mb-2 drop-shadow-lg">
+              <h1 className="text-white font-Great_Vibes text-4xl md:text-5xl tracking-wider font-medium leading-tight mb-2 drop-shadow-lg">
                 {product.name}
               </h1>
             </div>
@@ -227,13 +227,13 @@ const ProductDetail = () => {
             </div>
 
             <div className="pt-4 space-y-3">
-              <p className="text-primary text-3xl font-bold font-Poppins drop-shadow-md mb-1">
+              <p className="text-white border-t border-white/10 p-4 text-2xl font-bold font-Poppins drop-shadow-md mb-1">
                 {product.price}
               </p>
               <button 
                 onClick={handleAddToCart}
                 disabled={adding}
-                className={`w-full relative overflow-hidden py-6 rounded-2xl font-bold text-xl transition-all duration-700 flex items-center justify-center gap-3 shadow-2xl active:scale-95
+                className={`w-full relative overflow-hidden font-poppins text-white py-6 rounded-2xl font-bold text-xl transition-all duration-700 flex items-center justify-center gap-3 shadow-2xl active:scale-95
                   ${adding 
                     ? 'bg-green-600 text-white' 
                     : 'bg-primary text-black hover:bg-white hover:shadow-[0_20px_40px_rgba(251,112,16,0.4)]'
@@ -260,127 +260,133 @@ const ProductDetail = () => {
         </div>
 
         {/* Reviews Section */}
-        <div className="mt-32 pt-20 border-t border-white/10 max-w-4xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
-            <div>
-              <h2 className="text-white text-4xl font-Poppins font-medium mb-2">Customer Reviews</h2>
-              <div className="flex items-center gap-2">
-                <div className="flex text-primary">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`w-5 h-5 ${i < Math.round(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length || 5) ? 'text-primary' : 'text-zinc-700'}`}>
-                      <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                    </svg>
-                  ))}
-                </div>
-                <span className="text-zinc-300 text-sm font-medium">({reviews.length} reviews)</span>
-              </div>
-            </div>
-            {!isAuthenticated && (
-              <Link to="/signin" className="bg-primary text-black hover:bg-white transition-colors text-sm font-bold border-none px-6 py-2.5 rounded-full shadow-lg">
-                Sign in to write a review
-              </Link>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-12">
-            {/* Review Form */}
-            {isAuthenticated && (
-              <div className="bg-black/40 backdrop-blur-md p-8 rounded-3xl border border-white/10 mb-12 shadow-2xl">
-                <h3 className="text-white text-2xl font-medium mb-6">Write a Review</h3>
-                <form onSubmit={handleReviewSubmit} className="space-y-6">
-                  <div>
-                    <label className="text-white text-xs font-bold tracking-widest uppercase mb-3 block opacity-80">Rating</label>
-                    <div className="flex gap-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}
-                          className={`p-1 transition-all duration-300 hover:scale-110 ${reviewForm.rating >= star ? 'text-primary' : 'text-zinc-700'}`}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10">
-                            <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                          </svg>
-                        </button>
+        <div className="mt-32 pt-20 border-t border-white/20">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20">
+            
+            {/* Left: Summary & Form */}
+            <div className="flex flex-col gap-12 sticky top-32 self-start">
+              <div>
+                <h2 className="text-white text-4xl font-Poppins tracking-widest uppercase mb-4">Reviews</h2>
+                <div className="flex items-end gap-4 mb-2">
+                  <span className="text-white text-7xl font-light font-Poppins leading-none">
+                    {reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '5.0'}
+                  </span>
+                  <div className="pb-1">
+                    <div className="flex text-primary mb-1">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={i < Math.round(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length || 5) ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1} className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                        </svg>
                       ))}
                     </div>
+                    <span className="text-white/60 text-xs tracking-widest uppercase">{reviews.length} Experiences</span>
                   </div>
-                  <div>
-                    <label className="text-white text-xs font-bold tracking-widest uppercase mb-3 block opacity-80">Your Experience</label>
-                    <textarea
-                      required
-                      value={reviewForm.comment}
-                      onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                      placeholder="Tell us what you loved about this piece..."
-                      className="w-full bg-black/60 border border-white/10 rounded-2xl p-5 text-white placeholder:text-zinc-500 focus:border-primary outline-none transition-all shadow-inner min-h-[140px] text-lg font-Poppins"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isSubmittingReview}
-                    className="bg-white text-black px-12 py-4 rounded-2xl font-bold hover:bg-primary transition-all duration-300 disabled:opacity-50 shadow-xl active:scale-95"
-                  >
-                    {isSubmittingReview ? 'Posting...' : 'Post Your Review'}
-                  </button>
-                </form>
+                </div>
               </div>
-            )}
 
-            {/* Reviews List */}
-            <div className="space-y-10">
+              <div className="w-full h-px bg-white/20"></div>
+
+              {/* Form */}
+              <div>
+                {!isAuthenticated ? (
+                  <div className="text-white">
+                    <p className="text-white/80 mb-6 font-light">Sign in to share your experience with this piece.</p>
+                    <Link to="/signin" className="inline-block border border-white px-8 py-3 text-white hover:bg-white hover:text-black transition-colors text-xs font-bold tracking-widest uppercase">
+                      Sign In to Review
+                    </Link>
+                  </div>
+                ) : (
+                  <form onSubmit={handleReviewSubmit} className="space-y-8">
+                    <div>
+                      <label className="text-[10px] text-white font-bold tracking-widest uppercase mb-4 block">Select Rating</label>
+                      <div className="flex gap-4">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                            className={`transition-all duration-300 ${reviewForm.rating >= star ? 'text-primary/90 scale-110' : 'text-white/20 hover:text-white/50'}`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={reviewForm.rating >= star ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1} className="w-8 h-8">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-white text-[10px] font-bold tracking-widest uppercase mb-4 block">Your Review</label>
+                      <textarea
+                        required
+                        value={reviewForm.comment}
+                        onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                        placeholder="Tell us what you loved..."
+                        className="w-full bg-transparent border-b border-white/20 pb-4 text-white placeholder:text-white/30 focus:border-white outline-none transition-colors resize-none text-sm font-light min-h-[80px]"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmittingReview}
+                      className="w-full bg-white text-black hover:bg-primary hover:text-white py-4 text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50"
+                    >
+                      {isSubmittingReview ? 'Submitting...' : 'Post Review'}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+
+            {/* Right: Reviews List */}
+            <div className="flex flex-col gap-12 pt-4">
               {reviews.length === 0 ? (
-                <div className="text-center py-16 bg-black/20 rounded-3xl border border-dashed border-white/10">
-                  <p className="text-zinc-300 italic text-lg">No reviews yet. Be the first to share your sparkling experience!</p>
+                <div className="py-4 md:py-12 border border-white/20 text-center">
+                  <p className="text-white/60 font-light font-Great_Vibes text-3xl tracking-wide">Be the first to leave a review.</p>
                 </div>
               ) : (
                 reviews.map((review) => (
-                  <div key={review.id} className="bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/5 transition-hover hover:border-white/20">
-                    <div className="flex justify-between items-start mb-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-xl border border-primary/30">
-                            {review.userName.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                            <h4 className="text-white font-semibold text-lg">{review.userName}</h4>
-                            <div className="flex text-primary mt-1">
-                            {[...Array(5)].map((_, i) => (
-                                <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={i < review.rating ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1} className="w-4 h-4">
-                                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                                </svg>
-                            ))}
-                            </div>
+                  <div key={review.id} className="group">
+                    <div className="flex justify-between items-end mb-6">
+                      <div>
+                        <h4 className="text-white font-medium tracking-wide uppercase text-sm mb-2">{review.userName}</h4>
+                        <div className="flex text-white gap-1 mb-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={i < review.rating ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1} className={`w-3.5 h-3.5 ${i >= review.rating && 'text-white/20'}`}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                            </svg>
+                          ))}
                         </div>
                       </div>
-                      <span className="text-zinc-300 text-sm font-medium bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                      <span className="text-white/40 text-[10px] tracking-widest uppercase">
                         {review.createdAt instanceof Date ? review.createdAt.toLocaleDateString() : 'Mar 2026'}
                       </span>
                     </div>
-                    <p className="text-white/90 font-Poppins text-lg leading-relaxed pl-16">
-                      {review.comment}
+                    <p className="text-white/80 font-light text-lg leading-relaxed mb-6 gap-x-2">
+                      "{review.comment}"
                     </p>
                     
                     {review.adminReply && (
-                      <div className="mt-6 ml-16 p-6 bg-primary/10 border-l-4 border-primary rounded-r-2xl">
-                          <div className="flex items-center gap-3 mb-2">
-                              <span className="text-primary font-bold text-xs tracking-widest uppercase">Admin Response</span>
-                              <span className="text-zinc-500 text-[10px]">{review.repliedAt?.toDate ? review.repliedAt.toDate().toLocaleDateString() : 'Replied'}</span>
-                          </div>
-                          <p className="text-zinc-100 font-Poppins leading-relaxed">
-                              {review.adminReply}
-                          </p>
+                      <div className="pl-6 border-l w-full border-white/20 ml-2">
+                        <div className="mb-2 text-white text-[9px] font-bold tracking-[0.2em] uppercase">
+                            Saga Studio
+                        </div>
+                        <p className="text-white/60 font-light text-sm italic">
+                            "{review.adminReply}"
+                        </p>
                       </div>
                     )}
+                    <div className="w-full h-px bg-white/10 mt-12 transition-colors duration-500 group-hover:bg-white/40"></div>
                   </div>
                 ))
               )}
             </div>
+
           </div>
         </div>
 
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
-          <div className="mt-32 pt-20 border-t border-zinc-800/50">
-            <h2 className="text-white font-Great_Vibes text-6xl text-center mb-16">You May Also Love</h2>
+          <div className="mt-32 pt-20 border-t border-white/50">
+            <h2 className="text-white font-Great_Vibes text-4xl md:text-6xl text-center mb-16">You May Also Love</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {relatedProducts.map((item) => (
                 <Link 
@@ -396,7 +402,7 @@ const ProductDetail = () => {
                     />
                   </div>
                   <h3 className="text-white font-medium group-hover:text-primary transition-colors text-center">{item.name}</h3>
-                  <p className="text-zinc-500 text-sm text-center">{item.price}</p>
+                  <p className="text-white/70 text-sm text-center">{item.price}</p>
                 </Link>
               ))}
             </div>

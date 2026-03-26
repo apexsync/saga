@@ -20,11 +20,13 @@ body {
 html, body {
   width: 100vw;
   overflow-x: hidden;
+  scrollbar-width: none;
 }
 
 * {
   box-sizing: border-box;
 }
+
 
 
 

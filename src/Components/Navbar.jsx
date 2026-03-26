@@ -81,7 +81,7 @@ function Navbar(){
         <Search isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             <div style={{ backgroundColor: "black" }} className={`fixed top-0 left-0 h-full w-[70vw] md:w-[30vw] bg-black text-white transform transition-transform duration-700 ease-in-out z-[100] flex flex-col ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
-               <div className="absolute top-5 left-10 z-50">
+               <div className="flex justify-between items-center absolute top-5 left-0 w-full px-10 z-50">
                     <button 
                         className="flex flex-col justify-center items-center w-8 h-8 gap-1.5 overflow-hidden" 
                         onClick={() => setIsOpen(!isOpen)}
@@ -102,6 +102,14 @@ function Navbar(){
                             }`}
                         ></span>
                     </button>
+                    {isAuthenticated && (
+                        <button 
+                            onClick={() => { logout(); setIsOpen(false); }} 
+                            className="border border-red-600 text-red-500 font-bold py-1 px-4 text-sm rounded hover:bg-red-600 hover:text-white transition-colors font-[Poppins]"
+                        >
+                            Sign Out
+                        </button>
+                    )}
                </div>
                <div className="flex flex-col items-center mt-16 px-6 text-center">
                     {isAuthenticated ? (
@@ -122,6 +130,14 @@ function Navbar(){
                     )}
                </div>
                <ul className="flex justify-center items-center flex-col text-center md:text-xl text-white/80">
+                    <Link to="/" className="w-full" onClick={() => setIsOpen(false)}>
+                        <li className="cursor-pointer p-4 border-t border-b border-t-primary border-b-primary w-full hover:text-primary flex items-center justify-start pl-10 gap-4 group">
+                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#FB7010" className="w-7 h-7 group-hover:scale-110 transition-transform">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                            </svg>
+                            Home
+                        </li>
+                    </Link>
                     <Link to="/products" className="w-full" onClick={() => setIsOpen(false)}>
                         <li className="cursor-pointer p-4 border-t border-b border-t-primary border-b-primary w-full hover:text-primary flex items-center justify-start pl-10 gap-4 group">
                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#FB7010" className="w-7 h-7 group-hover:scale-110 transition-transform">
@@ -189,11 +205,7 @@ function Navbar(){
                     
                </ul>
                 <div className="flex flex-col gap-4 mt-8 w-full px-12 pb-8">
-                    {isAuthenticated ? (
-                        <button onClick={() => { logout(); setIsOpen(false); }} className='w-full border border-red-600 text-red-500 font-bold py-2.5 rounded hover:bg-red-600 hover:text-white transition-colors font-[Poppins]'>
-                            Sign Out
-                        </button>
-                    ) : (
+                    {!isAuthenticated && (
                         <>
                         <Link to="/signin" onClick={() => setIsOpen(false)} className='w-full'>
                             <button className='w-full text-white font-bold py-2.5 rounded hover:bg-orange-600 transition-colors font-[Poppins]'>
