@@ -60,18 +60,18 @@ export default function ImageLayout(){
         <>
         <div className="relative w-[90vw] md:w-[75vw] m-auto">
             <h1 className="absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 translate-y-1/3 left-1/3 text-white md:bg-black md:p-6 rounded-xl md:text-primary text-center text-5xl md:text-8xl font-Great_Vibes z-10">Festive Edit</h1>
-            <div className="grid grid-cols-1 md:flex justify-center items-center gap-2">
+            <div className="grid grid-cols-1 md:flex justify-center items-center gap-4 md:gap-2">
 
                 <div className="flex flex-col gap-4 md:gap-2 flex-1">
-                {content.items[0] && <img src={content.items[0].src} alt={content.items[0].alt} className="rounded-4xl md:rounded-2xl md:h-[23vw] h-[60vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[0] && <img src={content.items[0].src} alt={content.items[0].alt} className="rounded-4xl md:rounded-2xl md:h-[23vw] h-[80vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 
-                {content.items[1] && <img src={content.items[1].src} alt={content.items[1].alt} className="rounded-4xl md:rounded-2xl md:h-[18vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[1] && <img src={content.items[1].src} alt={content.items[1].alt} className="rounded-4xl md:rounded-2xl md:h-[18vw] h-[60vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 </div>
                 <div className="flex flex-col gap-4 md:gap-2 flex-1">
 
-                {content.items[2] && <img src={content.items[2].src} alt={content.items[2].alt} className="rounded-4xl md:rounded-2xl md:h-[18vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[2] && <img src={content.items[2].src} alt={content.items[2].alt} className="rounded-4xl md:rounded-2xl md:h-[18vw] h-[60vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 
-                {content.items[3] && <img src={content.items[3].src} alt={content.items[3].alt} className="rounded-4xl md:rounded-2xl md:h-[23vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[3] && <img src={content.items[3].src} alt={content.items[3].alt} className="rounded-4xl md:rounded-2xl md:h-[23vw] h-[60vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 </div>
             </div>
          </div>
