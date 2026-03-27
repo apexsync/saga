@@ -63,13 +63,13 @@ export default function ImageLayout(){
             <div className="grid grid-cols-1 md:flex justify-center items-center gap-2">
 
                 <div className="flex flex-col gap-2 flex-1">
-                {content.items[0] && <img src={content.items[0].src} alt={content.items[0].alt} className="rounded-2xl md:h-[23vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[0] && <img src={content.items[0].src} alt={content.items[0].alt} className="rounded-2xl md:h-[23vw] h-[60vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 
-                {content.items[1] && <img src={content.items[1].src} alt={content.items[1].alt} className="rounded-2xl md:h-[18vw] h-[30vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[1] && <img src={content.items[1].src} alt={content.items[1].alt} className="rounded-2xl md:h-[18vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 </div>
                 <div className="flex flex-col gap-2 flex-1">
 
-                {content.items[2] && <img src={content.items[2].src} alt={content.items[2].alt} className="rounded-2xl md:h-[18vw] h-[30vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
+                {content.items[2] && <img src={content.items[2].src} alt={content.items[2].alt} className="rounded-2xl md:h-[18vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 
                 {content.items[3] && <img src={content.items[3].src} alt={content.items[3].alt} className="rounded-2xl md:h-[23vw] h-[40vw] w-full object-cover hover:scale-105 transform transition-transform duration-300" />}
                 </div>
