@@ -59,7 +59,7 @@ export default function ImageLayout(){
     return(
         <>
         <div className="relative w-[90vw] md:w-[75vw] m-auto">
-            <h1 className="absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 translate-y-1/3 left-1/3 text-white md:bg-black md:p-6 rounded-xl md:text-primary text-center text-6xl md:text-8xl font-Great_Vibes z-50">Festive Edit</h1>
+            <h1 className="absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 translate-y-1/3 left-1/3 text-white md:bg-black md:p-6 rounded-xl md:text-primary text-center text-4xl md:text-8xl font-Great_Vibes z-50">Festive Edit</h1>
             <div className="grid grid-cols-1 md:flex justify-center items-center gap-2">
 
                 <div className="flex flex-col gap-2 flex-1">
